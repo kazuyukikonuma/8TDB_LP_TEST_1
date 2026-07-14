@@ -304,6 +304,29 @@
     .cover-text{position:absolute;left:0;right:0;bottom:max(84px,calc(env(safe-area-inset-bottom) + 66px));z-index:2;padding:0 26px;text-align:center;color:var(--paper)}
     .cover-h1{font-size:clamp(15px,3.8vw,20px);font-weight:800;line-height:1.4;text-shadow:0 2px 20px rgba(0,0,0,.82),0 1px 4px rgba(0,0,0,.7)}
     .cover-sub{margin-top:9px;font-size:13px;line-height:1.66;color:rgba(245,239,226,.9);text-shadow:0 2px 12px rgba(0,0,0,.75),0 1px 3px rgba(0,0,0,.6)}
+    /* outro は余白があるので見出しは少し大きめに */
+    .outro .cover-h1{font-size:clamp(20px,5.4vw,28px)}
+    .outro .cover-text{bottom:max(120px,calc(env(safe-area-inset-bottom) + 96px))}
+    /* outro の大きな主CTAボタン（夕景の上で目立つゴールド） */
+    .outro-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;min-height:60px;
+      padding:0 40px;border-radius:34px;text-decoration:none;font-size:clamp(17px,4.6vw,20px);font-weight:800;letter-spacing:.03em;
+      color:#3a2410;background:linear-gradient(180deg,#f2c669,#dd9d3c);
+      box-shadow:0 16px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.5);
+      animation:ctaPulse 2.4s ease-in-out infinite;-webkit-tap-highlight-color:transparent}
+    .outro-cta .arw{transition:transform .25s ease}
+    .outro-cta:hover .arw{transform:translateX(4px)}
+    .outro-cta:active{transform:scale(.97)}
+    .outro-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    @keyframes ctaPulse{0%,100%{box-shadow:0 16px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.5),0 0 0 0 rgba(242,198,105,.5)}50%{box-shadow:0 16px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.5),0 0 0 12px rgba(242,198,105,0)}}
+    /* outro 専用の戻るボタン（左上・CTA以外で唯一押せる） */
+    .outro-back{position:absolute;top:max(16px,calc(env(safe-area-inset-top) + 10px));left:clamp(12px,4vw,20px);z-index:3;
+      display:inline-flex;align-items:center;gap:7px;min-height:40px;padding:0 16px 0 13px;border-radius:22px;cursor:pointer;
+      color:var(--paper);font:inherit;font-size:13px;font-weight:700;letter-spacing:.04em;
+      background:rgba(20,14,8,.42);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,.28);-webkit-tap-highlight-color:transparent}
+    .outro-back .ob-chev{width:9px;height:9px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg)}
+    .outro-back:active{transform:scale(.95)}
+    .outro-back:focus-visible{outline:2px solid #fff;outline-offset:3px}
 
     /* Scene7：商品構成・オファー・購入CTA（クリーム地） */
     .pack{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px}
@@ -328,6 +351,18 @@
     .buy:focus-visible{outline:2px solid var(--gold-ink);outline-offset:4px}
     .fineprint{margin-top:11px;font-size:11px;color:rgba(51,41,31,.6);line-height:1.6}
 
+    /* Scene7 買切ブロック：全情報を1画面に収めるため圧縮（padding-bottom も戻す） */
+    .buy-block{padding-top:clamp(16px,4vw,26px);padding-bottom:clamp(16px,4vw,26px);gap:8px}
+    .buy-block h2{font-size:clamp(19px,5.2vw,26px)}
+    .buy-block .pack{margin-top:8px;gap:6px}
+    .buy-block .pack li{font-size:clamp(13px,3.6vw,15px);padding-left:20px}
+    .buy-block .pack li::before{top:.56em;width:7px;height:7px}
+    .buy-block .offer{margin-top:11px;padding-top:11px}
+    .buy-block .price .now{font-size:clamp(24px,6.4vw,32px)}
+    .buy-block .terms{font-size:11.5px;margin-top:6px}
+    .buy-block .buy{margin-top:13px;min-height:50px}
+    .buy-block .fineprint{margin-top:7px}
+
     /* 商品ロゴ（巧虎雙語點讀圖鑑）：hero＝人物の下の空き地に配置（被り回避・遅れて収まる演出）／Scene7＝商品名 */
     .cover-brand{position:absolute;left:0;right:0;bottom:24%;z-index:2;
       display:flex;justify-content:center;padding:0 26px;pointer-events:none;opacity:0}
@@ -339,6 +374,26 @@
       filter:blur(16px)}
     .cover-logo-img{width:min(44vw,182px);max-width:92%;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.28))}
     .prod-logo{width:min(300px,84%);height:auto;margin:6px 0 10px;filter:drop-shadow(0 6px 14px rgba(51,41,31,.14))}
+
+    /* Scene7 商品写真ギャラリー（stage 上に重ねる・左右スワイプ＋矢印） */
+    .gallery{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:6;display:none;background:var(--cream)}
+    .gallery.on{display:block}
+    .gtrack{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .gtrack::-webkit-scrollbar{display:none}
+    .gslide{flex:0 0 100%;height:100%;scroll-snap-align:center;display:grid;place-items:center;padding:12px 40px}
+    .gslide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
+      filter:drop-shadow(0 10px 22px rgba(51,41,31,.16))}
+    .gnav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;cursor:pointer;
+      border:1px solid rgba(154,116,32,.5);background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+      color:var(--gold-ink);font-size:26px;line-height:1;display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.14);
+      -webkit-tap-highlight-color:transparent}
+    .gnav:active{transform:translateY(-50%) scale(.9)}
+    .gnav:focus-visible{outline:2px solid var(--gold-ink);outline-offset:3px}
+    .gprev{left:10px}.gnext{right:10px}
+    .gdots{position:absolute;bottom:9px;left:0;right:0;display:flex;justify-content:center;gap:7px;z-index:2}
+    .gdot{width:7px;height:7px;border-radius:50%;background:rgba(154,116,32,.32);transition:background .25s,transform .25s}
+    .gdot.on{background:var(--gold-ink);transform:scale(1.25)}
+    @media (min-width:860px){.gallery{width:50vw;height:100svh;right:auto}}
   </style>
 </head>
 <body>
@@ -362,6 +417,21 @@
     <div class="flash"></div>
   </div>
 
+  <!-- Scene7 用：商品写真ギャラリー（左右スワイプ／矢印ボタン） -->
+  <div class="gallery" id="gallery" aria-label="商品照片">
+    <div class="gtrack" id="gtrack">
+      <div class="gslide"><img src="art/all.png" alt="全套內容" loading="lazy"></div>
+      <div class="gslide"><img src="art/machine.png" alt="點讀巧虎主機" loading="lazy"></div>
+      <div class="gslide"><img src="art/book1.jpg" alt="雙語點讀圖鑑 ①" loading="lazy"></div>
+      <div class="gslide"><img src="art/book2.jpg" alt="雙語點讀圖鑑 ②" loading="lazy"></div>
+      <div class="gslide"><img src="art/book3.jpg" alt="雙語點讀圖鑑 ③" loading="lazy"></div>
+      <div class="gslide"><img src="art/book4.jpg" alt="雙語點讀圖鑑 ④" loading="lazy"></div>
+    </div>
+    <button class="gnav gprev" id="gPrev" type="button" aria-label="上一張">‹</button>
+    <button class="gnav gnext" id="gNext" type="button" aria-label="下一張">›</button>
+    <div class="gdots" id="gdots"></div>
+  </div>
+
   <!-- 下：スクロール文字 -->
   <main class="scroller">
     <!-- Scene 2：共感（子の姿） -->
@@ -375,7 +445,7 @@
     <!-- Scene 6：機能の価値（定稿） -->
     <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 7：全套内容（all.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><img class="prod-logo" src="art/logo.png" alt="巧虎雙語點讀圖鑑（寶寶第一套雙語點讀書）"><h2>打開箱子，全部都在這裡</h2>
+    <section class="block buy-block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><h2>打開箱子，全部都在這裡</h2>
       <ul class="pack">
         <li><b>點讀巧虎</b>主機 ×1</li>
         <li><b>雙語點讀圖鑑</b> ×4 本（約 1000 個中英詞彙）</li>
@@ -390,13 +460,14 @@
     </div></section>
   </main>
 
-  <!-- エンディング：全画面ヒーロー（クレジット後）→ タップ/スクロールで最初へループ -->
+  <!-- エンディング：全画面ヒーロー → CTA と戻るボタンのみ操作可 -->
   <div class="outro" id="outro" style="background-image:url('art/ending.jpg')">
+    <button class="outro-back" id="outroBack" type="button" aria-label="回上一頁"><span class="ob-chev" aria-hidden="true"></span>回上一頁</button>
     <div class="cover-text">
       <h1 class="cover-h1">不是現在就要他記住很多英文，</h1>
       <p class="cover-sub">是讓他每次把手伸向世界，都聽見一個能和你一起發現的回應。</p>
+      <a class="outro-cta" id="outroCta" href="https://store.benesse.com.tw/products/%E5%B7%A7%E8%99%8E%E9%9B%99%E8%AA%9E%E9%BB%9E%E8%AE%80%E5%9C%96%E9%91%91" target="_blank" rel="noopener">看看完整內容　<span class="arw" aria-hidden="true">→</span></a>
     </div>
-    <a class="cover-cue" id="outroCta" href="https://store.benesse.com.tw/products/%E5%B7%A7%E8%99%8E%E9%9B%99%E8%AA%9E%E9%BB%9E%E8%AE%80%E5%9C%96%E9%91%91" target="_blank" rel="noopener" aria-label="看看完整內容（前往官方商城）"><span class="cue-label">看看完整內容</span><span class="chev" aria-hidden="true"></span></a>
   </div>
 
   <div class="pager-nav">
@@ -421,31 +492,23 @@
       var outro=document.getElementById("outro"),outroShown=false,outroReady=false,looping=false;
       var active=0,curBg="",curLang="ja";
 
-      // エンディング → タップ/スクロールでオープニングと同じ退場演出 → 先頭へループ
-      function outroLoop(){
-        if(looping||!outroShown||!outroReady)return;
-        looping=true;
-        scroller.scrollTop=0;              // 退場中の不透明な画面の裏で先頭へ戻す
-        outro.classList.add("out");        // フェード＆拡大で退場し、冒頭を見せる
-        setTimeout(function(){
-          outro.classList.remove("show","go","out");
-          outroShown=false;looping=false;
-        },800);
+      // エンディングを閉じて Scene7 へ戻る（戻るボタン専用・タップで1ページ目へ戻る挙動は廃止）
+      function closeOutro(){
+        if(!outroShown)return;
+        outroShown=false;outro.classList.remove("show","go");
+        if(pagerDown)pagerDown.classList.remove("hide");
+        toggleGallery(lastIdx===galleryIdx);
       }
-      if(outro){
-        outro.addEventListener("click",outroLoop);   // ボタン操作のみ：ホイール自走は無効
-      }
-      // 購入CTAは官方商城へ遷移（ループ演出を誘発させない）
-      var outroCta=document.getElementById("outroCta");
-      if(outroCta){outroCta.addEventListener("click",function(e){e.stopPropagation();});}
+      var outroBack=document.getElementById("outroBack");
+      if(outroBack)outroBack.addEventListener("click",closeOutro);
       // エンディングを表示（最後のブロックを見たあと、もう一度「進む」で）
       function showEnding(){
-        if(!outro||outroShown||looping)return;
-        outroShown=true;outroReady=false;
+        if(!outro||outroShown)return;
+        outroShown=true;
         outro.classList.add("show");outro.classList.remove("go");void outro.offsetWidth;outro.classList.add("go");
-        setTimeout(function(){outroReady=true;},700);
+        toggleGallery(false);
         if(pagerDown)pagerDown.classList.add("hide");
-        if(pagerUp)pagerUp.classList.add("hide");
+        if(pagerUp)pagerUp.classList.add("hide");   // 戻るは outro 内の専用ボタンで行う
       }
 
       // ページ送り：長いブロックは画面ぶんずつ、収まりきったら隣のブロックへ。最後の次でエンディング
@@ -471,16 +534,31 @@
       function showHint(){ if(hintDone||!navHint)return; navHint.classList.add("show"); clearTimeout(hintTimer); hintTimer=setTimeout(hideHint,6000); }
       function hideHint(){ if(!navHint)return; hintDone=true; navHint.classList.remove("show"); }
       function navNext(){ hideHint(); goNext(); }
-      function navPrev(){ hideHint(); goPrev(); }
+      function navPrev(){ hideHint(); if(outroShown){closeOutro();return;} goPrev(); }
       if(pagerDown){pagerDown.addEventListener("click",navNext);}
       if(pagerUp){pagerUp.addEventListener("click",navPrev);}
-      // キーボード操作（アクセシビリティ：本編中のみ）
+      // キーボード操作（アクセシビリティ）
       document.addEventListener("keydown",function(e){
-        if(!coverDone||outroShown)return;
+        if(!coverDone)return;
         var k=e.key;
+        if(outroShown){ if(k==="ArrowUp"||k==="PageUp"){e.preventDefault();navPrev();} return; }
         if(k==="ArrowDown"||k==="PageDown"||k===" "||k==="Spacebar"){e.preventDefault();navNext();}
         else if(k==="ArrowUp"||k==="PageUp"){e.preventDefault();navPrev();}
       });
+
+      // Scene7 商品写真ギャラリー（左右スワイプ＋矢印ボタン）
+      var gallery=document.getElementById("gallery"),gtrack=document.getElementById("gtrack"),
+          gPrev=document.getElementById("gPrev"),gNext=document.getElementById("gNext"),gdots=document.getElementById("gdots");
+      var gslides=gtrack?[].slice.call(gtrack.querySelectorAll(".gslide")):[];
+      var galleryIdx=blocks.length-1;  // 最終ブロック(Scene7)でギャラリー表示
+      if(gdots){gslides.forEach(function(_,i){var d=document.createElement("span");d.className="gdot"+(i===0?" on":"");gdots.appendChild(d);});}
+      function gGo(i){ if(!gtrack)return; i=Math.max(0,Math.min(gslides.length-1,i)); gtrack.scrollTo({left:i*gtrack.clientWidth,behavior:reduce?"auto":"smooth"}); }
+      function gCurrent(){ return gtrack?Math.round(gtrack.scrollLeft/Math.max(1,gtrack.clientWidth)):0; }
+      function gSync(){ var i=gCurrent(); [].forEach.call(gdots?gdots.children:[],function(d,k){d.classList.toggle("on",k===i);}); }
+      if(gPrev)gPrev.addEventListener("click",function(){gGo(gCurrent()-1);});
+      if(gNext)gNext.addEventListener("click",function(){gGo(gCurrent()+1);});
+      if(gtrack){var gt=false;gtrack.addEventListener("scroll",function(){if(!gt){requestAnimationFrame(function(){gt=false;gSync();});gt=true;}},{passive:true});}
+      function toggleGallery(on){ if(gallery)gallery.classList.toggle("on",!!on); }
 
       function setStage(b){
         var src=b.dataset.bg,pos=b.dataset.pos||"center",fit=b.dataset.fit||"cover";
@@ -505,6 +583,7 @@
         var idx=0;
         for(var i=0;i<blocks.length;i++){ if(blocks[i].offsetTop<=mid) idx=i; else break; }
         if(idx!==lastIdx){lastIdx=idx;setStage(blocks[idx]);}
+        toggleGallery(lastIdx===galleryIdx && !outroShown);   // Scene7でギャラリー表示
         // ロゴをスクロールに合わせて少しだけ動かす（パララックス）
         if(stageLogo){
           var b=blocks[idx],frac=(top-b.offsetTop)/Math.max(1,b.offsetHeight);
@@ -515,9 +594,7 @@
         if(pagerUp){pagerUp.classList.toggle("hide",top<=4||outroShown);}
         if(pagerDown){pagerDown.classList.toggle("hide",outroShown);}
         // 安全策：万一スクロールで最下部から離れたらエンディングを閉じる
-        if(outro&&!looping&&outroShown&&top<(scroller.scrollHeight-scroller.clientHeight-4)){
-          outroShown=false;outro.classList.remove("show","go");
-        }
+        if(outro&&outroShown&&top<(scroller.scrollHeight-scroller.clientHeight-4)){ closeOutro(); }
       }
       scroller.addEventListener("scroll",function(){ if(!ticking){requestAnimationFrame(update);ticking=true;} },{passive:true});
 
