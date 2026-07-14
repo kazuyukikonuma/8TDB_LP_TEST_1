@@ -378,12 +378,18 @@
     /* Scene7 商品写真ギャラリー（stage 上に重ねる・左右スワイプ＋矢印） */
     .gallery{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:6;display:none;background:var(--cream)}
     .gallery.on{display:block}
+    .gallery-logo{position:absolute;top:max(8px,env(safe-area-inset-top));left:0;right:0;z-index:3;
+      display:flex;justify-content:center;padding:0 20px;pointer-events:none}
+    .gallery-logo img{width:min(41vw,158px);height:auto;filter:drop-shadow(0 3px 9px rgba(51,41,31,.18))}
     .gtrack{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
       touch-action:pan-x;overscroll-behavior:contain}
     .gtrack::-webkit-scrollbar{display:none}
-    .gslide{flex:0 0 100%;height:100%;scroll-snap-align:center;display:grid;place-items:center;padding:12px 40px}
-    .gslide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
+    .gslide{flex:0 0 100%;height:100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:8px;padding:108px 38px 32px}
+    .gslide img{max-width:100%;max-height:100%;width:auto;height:auto;min-height:0;object-fit:contain;
       filter:drop-shadow(0 10px 22px rgba(51,41,31,.16));pointer-events:none;-webkit-user-drag:none;user-select:none}
+    .gcap{flex:0 0 auto;text-align:center;font-size:12px;line-height:1.5;color:var(--ink-soft);max-width:98%}
+    .gcap b{color:var(--ink);font-weight:800}
     .gnav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;cursor:pointer;
       border:1px solid rgba(154,116,32,.5);background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
       color:var(--gold-ink);font-size:26px;line-height:1;display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.14);
@@ -420,13 +426,15 @@
 
   <!-- Scene7 用：商品写真ギャラリー（左右スワイプ／矢印ボタン） -->
   <div class="gallery" id="gallery" aria-label="商品照片">
+    <div class="gallery-logo"><img src="art/logo.png" alt="巧虎雙語點讀圖鑑" loading="lazy"></div>
     <div class="gtrack" id="gtrack">
-      <div class="gslide"><img src="art/all.png" alt="全套內容" loading="lazy"></div>
-      <div class="gslide"><img src="art/machine.png" alt="點讀巧虎主機" loading="lazy"></div>
-      <div class="gslide"><img src="art/book1.jpg" alt="雙語點讀圖鑑 ①" loading="lazy"></div>
-      <div class="gslide"><img src="art/book2.jpg" alt="雙語點讀圖鑑 ②" loading="lazy"></div>
-      <div class="gslide"><img src="art/book3.jpg" alt="雙語點讀圖鑑 ③" loading="lazy"></div>
-      <div class="gslide"><img src="art/book4.jpg" alt="雙語點讀圖鑑 ④" loading="lazy"></div>
+      <div class="gslide"><img src="art/all.png" alt="全套內容" loading="lazy"><p class="gcap">全套內容 ‧ 點讀主機＋圖鑑4本＋育兒誌</p></div>
+      <div class="gslide"><img src="art/machine.png" alt="點讀巧虎主機" loading="lazy"><p class="gcap"><b>點讀巧虎主機</b>｜握著往圖上一點，中英雙語就回話</p></div>
+      <div class="gslide"><img src="art/book1.jpg" alt="雙語點讀圖鑑 ①" loading="lazy"><p class="gcap"><b>圖鑑①</b> ‧ 動物・交通工具・食物</p></div>
+      <div class="gslide"><img src="art/book2.jpg" alt="雙語點讀圖鑑 ②" loading="lazy"><p class="gcap"><b>圖鑑②</b> ‧ 交通工具・玩具・生活用品・餐具・食物・蔬果</p></div>
+      <div class="gslide"><img src="art/book3.jpg" alt="雙語點讀圖鑑 ③" loading="lazy"><p class="gcap"><b>圖鑑③</b> ‧ 衣物・動物與鳥類・牧場動物・身體・臉・公園</p></div>
+      <div class="gslide"><img src="art/book4.jpg" alt="雙語點讀圖鑑 ④" loading="lazy"><p class="gcap"><b>圖鑑④</b> ‧ 水族館動物・植物・動物・季節・形狀花紋・顏色</p></div>
+      <div class="gslide"><img src="art/ikujishi.jpg" alt="給爸媽的育兒誌" loading="lazy"><p class="gcap"><b>給爸媽的育兒誌</b>｜陪讀與互動的小提醒</p></div>
     </div>
     <button class="gnav gprev" id="gPrev" type="button" aria-label="上一張">‹</button>
     <button class="gnav gnext" id="gNext" type="button" aria-label="下一張">›</button>
