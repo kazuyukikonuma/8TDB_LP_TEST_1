@@ -305,8 +305,11 @@
     .cover-h1{font-size:clamp(15px,3.8vw,20px);font-weight:800;line-height:1.4;text-shadow:0 2px 20px rgba(0,0,0,.82),0 1px 4px rgba(0,0,0,.7)}
     .cover-sub{margin-top:9px;font-size:13px;line-height:1.66;color:rgba(245,239,226,.9);text-shadow:0 2px 12px rgba(0,0,0,.75),0 1px 3px rgba(0,0,0,.6)}
     /* outro は余白があるので見出しは少し大きめに */
-    .outro .cover-h1{font-size:clamp(20px,5.4vw,28px)}
+    .outro .cover-h1{font-size:clamp(20px,5.4vw,28px);text-shadow:0 2px 20px rgba(0,0,0,.9),0 1px 5px rgba(0,0,0,.8)}
+    .outro .cover-sub{color:rgba(255,255,255,.96);text-shadow:0 2px 14px rgba(0,0,0,.9),0 1px 4px rgba(0,0,0,.78)}
     .outro .cover-text{bottom:max(120px,calc(env(safe-area-inset-bottom) + 96px))}
+    /* outro はテキスト帯が中間トーンに乗るため暗幕を強く・高く */
+    .outro::after{height:84%;background:linear-gradient(to top,rgba(18,12,6,.94),rgba(18,12,6,.74) 26%,rgba(18,12,6,.46) 50%,rgba(18,12,6,.18) 72%,transparent)}
     /* outro の大きな主CTAボタン（夕景の上で目立つゴールド） */
     .outro-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;min-height:60px;
       padding:0 40px;border-radius:34px;text-decoration:none;font-size:clamp(17px,4.6vw,20px);font-weight:800;letter-spacing:.03em;
@@ -378,14 +381,14 @@
     /* Scene7 商品写真ギャラリー（stage 上に重ねる・左右スワイプ＋矢印） */
     .gallery{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:6;display:none;background:var(--cream)}
     .gallery.on{display:block}
-    .gallery-logo{position:absolute;top:max(8px,env(safe-area-inset-top));left:0;right:0;z-index:3;
-      display:flex;justify-content:center;padding:0 20px;pointer-events:none}
-    .gallery-logo img{width:min(41vw,158px);height:auto;filter:drop-shadow(0 3px 9px rgba(51,41,31,.18))}
+    .gallery-logo{position:absolute;top:max(10px,calc(env(safe-area-inset-top) + 2px));left:10px;z-index:3;pointer-events:none;
+      background:rgba(247,241,229,.82);border-radius:11px;padding:5px 9px;box-shadow:0 3px 10px rgba(51,41,31,.15)}
+    .gallery-logo img{width:min(30vw,116px);height:auto;display:block;filter:drop-shadow(0 1px 3px rgba(51,41,31,.2))}
     .gtrack{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
       touch-action:pan-x;overscroll-behavior:contain}
     .gtrack::-webkit-scrollbar{display:none}
     .gslide{flex:0 0 100%;height:100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:8px;padding:108px 38px 32px}
+      gap:8px;padding:18px 34px 32px}
     .gslide img{max-width:100%;max-height:100%;width:auto;height:auto;min-height:0;object-fit:contain;
       filter:drop-shadow(0 10px 22px rgba(51,41,31,.16));pointer-events:none;-webkit-user-drag:none;user-select:none}
     .gcap{flex:0 0 auto;text-align:center;font-size:12px;line-height:1.5;color:var(--ink-soft);max-width:98%}
@@ -450,7 +453,7 @@
     <!-- Scene 4：實物四冊（4books.png・透過→クリーム地） -->
     <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本厚頁雙語圖鑑，收錄約 1000 個中英詞彙──生活、動物、交通工具等，都是他每天看得到的世界。紙頁厚厚的，小手翻得動；從他最想指的那一頁，自然開始。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 5：點讀機（machine.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><h2>會回話的，是巧虎自己</h2><p style="margin-top:10px">專為寶寶小手設計的巧虎造型點讀主機。握著巧虎往圖上一點，中英雙語、真實音效與唸謠就回來了──他伸手，世界就回應。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
+    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><h2>一點，中文英文都會回話</h2><p style="margin-top:10px">專為寶寶小手設計的巧虎造型點讀主機。握著巧虎往圖上一點，中文、英文都會出聲——中英雙語一套兩用，還有真實音效與唸謠說唱。一致的標準發音，想聽幾次就點幾次，發音不用你來。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
     <!-- Scene 6：機能の価値（定稿） -->
     <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 7：全套内容（all.png・透過→クリーム地） -->
