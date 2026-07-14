@@ -329,14 +329,7 @@
     .buy:focus-visible{outline:2px solid var(--gold-ink);outline-offset:4px}
     .fineprint{margin-top:11px;font-size:11px;color:rgba(51,41,31,.6);line-height:1.6}
 
-    /* 商品ロゴ（巧虎雙語點讀圖鑑）：cover 上部＝ブランド identity／Scene7＝商品名 */
-    .cover-brand{position:absolute;left:0;right:0;top:max(22px,calc(env(safe-area-inset-top) + 14px));z-index:2;
-      display:flex;justify-content:center;padding:0 22px;pointer-events:none}
-    .cover-brand::before{content:"";position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
-      width:min(94%,540px);height:160%;z-index:-1;
-      background:radial-gradient(58% 54% at 50% 50%,rgba(248,242,230,.60),rgba(248,242,230,.26) 56%,transparent 74%);
-      filter:blur(12px)}
-    .cover-logo-img{width:min(60vw,272px);max-width:92%;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.32))}
+    /* 商品ロゴ（巧虎雙語點讀圖鑑）＝Scene7 の商品名として使用 */
     .prod-logo{width:min(300px,84%);height:auto;margin:6px 0 10px;filter:drop-shadow(0 6px 14px rgba(51,41,31,.14))}
   </style>
 </head>
@@ -346,7 +339,6 @@
 
   <!-- オープニング：全画面ヒーロー（ロゴが飛び出す） -->
   <div class="cover" id="cover" style="background-image:url('art/hero.jpg')">
-    <div class="cover-brand"><img class="cover-logo-img" src="art/logo.png" alt="巧虎雙語點讀圖鑑（寶寶第一套雙語點讀書）"></div>
     <div class="cover-text">
       <h1 class="cover-h1">當他想再點一次，巧虎就把世界說給他聽</h1>
       <p class="cover-sub">巧虎＋4本圖鑑，一點就聽見中英雙語、真實音效與唸謠。</p>
