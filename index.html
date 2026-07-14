@@ -290,6 +290,29 @@
     .cover-text{position:absolute;left:0;right:0;bottom:max(88px,calc(env(safe-area-inset-bottom) + 72px));z-index:2;padding:0 26px;text-align:center;color:var(--paper)}
     .cover-h1{font-size:clamp(26px,7.2vw,39px);font-weight:800;line-height:1.22;text-shadow:0 2px 16px rgba(0,0,0,.62)}
     .cover-sub{margin-top:12px;font-size:15px;line-height:1.72;color:var(--soft);text-shadow:0 1px 10px rgba(0,0,0,.55)}
+
+    /* Scene7：商品構成・オファー・購入CTA（クリーム地） */
+    .pack{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px}
+    .pack li{position:relative;padding-left:22px;font-size:clamp(14px,3.8vw,16.5px);color:var(--ink);line-height:1.5}
+    .pack li::before{content:"";position:absolute;left:2px;top:.6em;width:8px;height:8px;border-radius:50%;
+      background:var(--gold-ink);box-shadow:0 0 0 3px rgba(154,116,32,.16)}
+    .pack li b{font-weight:800}
+    .offer{margin-top:18px;padding-top:16px;border-top:1px solid rgba(154,116,32,.28)}
+    .price{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+    .price .was{color:var(--ink-soft);font-size:14px;text-decoration:line-through;text-decoration-color:rgba(51,41,31,.45)}
+    .price .now{color:#8f4e36;font-family:var(--mono);font-weight:700;font-size:clamp(26px,7vw,36px);
+      letter-spacing:.01em;font-variant-numeric:tabular-nums}
+    .terms{margin-top:8px;font-size:12px;line-height:1.7;color:var(--ink-soft)}
+    .buy{display:inline-flex;align-items:center;gap:10px;margin-top:18px;min-height:52px;
+      padding:0 26px;border-radius:30px;background:#8f4e36;color:#fdf7ec;text-decoration:none;
+      font-size:clamp(15px,4vw,17px);font-weight:800;letter-spacing:.02em;
+      box-shadow:0 12px 26px rgba(143,78,54,.32);transition:transform .18s ease,box-shadow .3s ease}
+    .buy .arw{transition:transform .25s ease}
+    .buy:hover{transform:translateY(-1px);box-shadow:0 16px 30px rgba(143,78,54,.4)}
+    .buy:hover .arw{transform:translateX(4px)}
+    .buy:active{transform:translateY(0) scale(.98)}
+    .buy:focus-visible{outline:2px solid var(--gold-ink);outline-offset:4px}
+    .fineprint{margin-top:11px;font-size:11px;color:rgba(51,41,31,.6);line-height:1.6}
   </style>
 </head>
 <body>
@@ -320,13 +343,25 @@
     <!-- Scene 3：四本圖鑑（概念・定稿） -->
     <section class="block" data-bg="art/mid2.jpg" data-pos="center 32%" data-title="World"><div class="reveal"><p class="idx">Scene 03</p><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div></section>
     <!-- Scene 4：實物四冊（4books.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><p class="idx">Scene 04</p><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本各有主題──動物、交通工具、生活用品、水族與植物。從孩子最愛的那一頁，自然開始。</p></div></section>
+    <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><p class="idx">Scene 04</p><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本厚頁雙語圖鑑，收錄約 1000 個中英詞彙──生活、動物、交通工具等，都是他每天看得到的世界。紙頁厚厚的，小手翻得動；從他最想指的那一頁，自然開始。</p></div></section>
     <!-- Scene 5：點讀機（machine.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><p class="idx">Scene 05</p><h2>巧虎點讀機，一點就回話</h2><p style="margin-top:10px">把筆點在圖上，就聽見中英雙語、真實音效與唸謠。圓圓胖胖，小手也好握、好操作。</p></div></section>
+    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><p class="idx">Scene 05</p><h2>會回話的，是巧虎自己</h2><p style="margin-top:10px">專為寶寶小手設計的巧虎造型點讀主機。握著巧虎往圖上一點，中英雙語、真實音效與唸謠就回來了──他伸手，世界就回應。</p></div></section>
     <!-- Scene 6：機能の価値（定稿） -->
     <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><p class="idx">Scene 06</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div></section>
     <!-- Scene 7：全套内容（all.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><p class="idx">Scene 07</p><h2>打開箱子，全部都在這裡</h2><p style="margin-top:10px">巧虎點讀機 ＋ 四本點讀圖鑑 ＋ 一本給爸媽的育兒誌。今天就能一起開始。</p></div></section>
+    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><p class="idx">Scene 07</p><h2>打開箱子，全部都在這裡</h2>
+      <ul class="pack">
+        <li><b>點讀巧虎</b>主機 ×1</li>
+        <li><b>雙語點讀圖鑑</b> ×4 本（約 1000 個中英詞彙）</li>
+        <li>給爸媽的<b>育兒誌</b> ×1 本</li>
+      </ul>
+      <div class="offer">
+        <p class="price"><span class="was">原價 NT$3,000</span><span class="now">特價 NT$2,399</span></p>
+        <p class="terms">6 個月以上就能用　·　單次購入、非訂閱　·　日本 Benesse／台灣巧連智官方正版</p>
+      </div>
+      <a class="buy" href="https://store.benesse.com.tw/products/%E5%B7%A7%E8%99%8E%E9%9B%99%E8%AA%9E%E9%BB%9E%E8%AE%80%E5%9C%96%E9%91%91" target="_blank" rel="noopener">看看完整內容與現行售價 <span class="arw" aria-hidden="true">→</span></a>
+      <p class="fineprint">實際售價與優惠以官網現行售價為準。</p>
+    </div></section>
   </main>
 
   <!-- エンディング：全画面ヒーロー（クレジット後）→ タップ/スクロールで最初へループ -->
@@ -335,7 +370,7 @@
       <h1 class="cover-h1">不是現在就要他記住很多英文，</h1>
       <p class="cover-sub">是讓他每次把手伸向世界，都聽見一個能和你一起發現的回應。</p>
     </div>
-    <button class="cover-cue" type="button" aria-label="看完整內容"><span class="cue-label">看看完整內容</span><span class="chev" aria-hidden="true"></span></button>
+    <a class="cover-cue" id="outroCta" href="https://store.benesse.com.tw/products/%E5%B7%A7%E8%99%8E%E9%9B%99%E8%AA%9E%E9%BB%9E%E8%AE%80%E5%9C%96%E9%91%91" target="_blank" rel="noopener" aria-label="看看完整內容（前往官方商城）"><span class="cue-label">看看完整內容</span><span class="chev" aria-hidden="true"></span></a>
   </div>
 
   <div class="pager-nav">
@@ -374,6 +409,9 @@
         outro.addEventListener("click",outroLoop);
         outro.addEventListener("wheel",outroLoop,{passive:true});
       }
+      // 購入CTAは官方商城へ遷移（ループ演出を誘発させない）
+      var outroCta=document.getElementById("outroCta");
+      if(outroCta){outroCta.addEventListener("click",function(e){e.stopPropagation();});}
       // エンディングを表示（最後のブロックを見たあと、もう一度「進む」で）
       function showEnding(){
         if(!outro||outroShown||looping)return;
