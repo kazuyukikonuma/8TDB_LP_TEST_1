@@ -136,12 +136,12 @@
     .outro.go .cover-logo{animation:logoPop 1.1s cubic-bezier(.2,.9,.25,1.25) forwards .15s}
 
     /* ===== 上：固定アート ステージ ===== */
-    .stage{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:1;overflow:hidden;background:#05060a}
-    .stage .layer{position:absolute;inset:0;background-size:cover;background-position:center;
+    .stage{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:1;overflow:hidden;background:var(--cream)}
+    .stage .layer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;
       opacity:0;transform:scale(1.05);transition:opacity .85s ease,transform 1.5s ease,background-position 1.2s ease;will-change:opacity,transform}
     .stage .layer.on{opacity:1;transform:scale(1)}
     .stage::after{content:"";position:absolute;inset:0;pointer-events:none;
-      background:linear-gradient(180deg,rgba(2,3,7,.10),transparent 20%,transparent 66%,rgba(246,239,224,.94))}
+      background:linear-gradient(180deg,rgba(2,3,7,.08),transparent 24%,transparent 72%,rgba(246,239,224,.82))}
     .stage .meter{position:absolute;left:clamp(14px,4vw,22px);bottom:12px;z-index:2;
       display:flex;gap:10px;align-items:center;color:rgba(245,239,226,.82);
       font-size:10px;letter-spacing:.18em;text-transform:uppercase}
@@ -315,9 +315,18 @@
 
   <!-- 下：スクロール文字 -->
   <main class="scroller">
-    <section class="block" data-bg="art/mid1.jpg" data-pos="center 45%" data-title="Scene 1"><div class="reveal"><p class="idx">Scene 01</p><h2>主角不是規格，是會回話的巧虎</h2><p style="margin-top:10px">寶寶伸手時，巧虎把聲音帶回來。</p></div></section>
-    <section class="block" data-bg="art/mid2.jpg" data-pos="center 32%" data-title="Scene 2"><div class="reveal"><p class="idx">Scene 02</p><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div></section>
-    <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Scene 3"><div class="reveal"><p class="idx">Scene 03</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。</p></div></section>
+    <!-- Scene 2：共感（子の姿） -->
+    <section class="block" data-bg="art/mid1.jpg" data-pos="center 45%" data-title="Story"><div class="reveal"><p class="idx">Scene 02</p><h2>主角不是規格，是會回話的巧虎</h2><p style="margin-top:10px">寶寶伸手時，巧虎把聲音帶回來。不是冷冰冰的機器，是會陪他一起發現的夥伴。</p></div></section>
+    <!-- Scene 3：四本圖鑑（概念・定稿） -->
+    <section class="block" data-bg="art/mid2.jpg" data-pos="center 32%" data-title="World"><div class="reveal"><p class="idx">Scene 03</p><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div></section>
+    <!-- Scene 4：實物四冊（4books.png・透過→クリーム地） -->
+    <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><p class="idx">Scene 04</p><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本各有主題──動物、交通工具、生活用品、水族與植物。從孩子最愛的那一頁，自然開始。</p></div></section>
+    <!-- Scene 5：點讀機（machine.png・透過→クリーム地） -->
+    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><p class="idx">Scene 05</p><h2>巧虎點讀機，一點就回話</h2><p style="margin-top:10px">把筆點在圖上，就聽見中英雙語、真實音效與唸謠。圓圓胖胖，小手也好握、好操作。</p></div></section>
+    <!-- Scene 6：機能の価値（定稿） -->
+    <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><p class="idx">Scene 06</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div></section>
+    <!-- Scene 7：全套内容（all.png・透過→クリーム地） -->
+    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><p class="idx">Scene 07</p><h2>打開箱子，全部都在這裡</h2><p style="margin-top:10px">巧虎點讀機 ＋ 四本點讀圖鑑 ＋ 一本給爸媽的育兒誌。今天就能一起開始。</p></div></section>
   </main>
 
   <!-- エンディング：全画面ヒーロー（クレジット後）→ タップ/スクロールで最初へループ -->
@@ -397,7 +406,7 @@
       if(pagerUp){pagerUp.addEventListener("click",goPrev);}
 
       function setStage(b){
-        var src=b.dataset.bg,pos=b.dataset.pos||"center";
+        var src=b.dataset.bg,pos=b.dataset.pos||"center",fit=b.dataset.fit||"cover";
         var i=blocks.indexOf(b);
         titleEl.textContent=b.dataset.title||"";
         countEl.textContent=String(i+1).padStart(2,"0")+" / "+String(blocks.length).padStart(2,"0");
@@ -405,7 +414,7 @@
         if(src===curBg){layers.forEach(function(l){l.style.backgroundPosition=pos;});return;}
         curBg=src;
         var next=layers[1-active],now=layers[active];
-        next.style.backgroundImage="url('"+src+"')";next.style.backgroundPosition=pos;
+        next.style.backgroundImage="url('"+src+"')";next.style.backgroundPosition=pos;next.style.backgroundSize=fit;
         next.classList.add("on");now.classList.remove("on");active=1-active;
         if(!reduce){flash.classList.remove("go");void flash.offsetWidth;flash.classList.add("go");}
       }
