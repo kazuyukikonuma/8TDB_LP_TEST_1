@@ -6,14 +6,15 @@
 ## 0. いまの状態
 - **公開中**：https://kazuyukikonuma.github.io/8TDB_LP_TEST_1/ （`main` にコミットで即更新）
 - **1ファイル完結**：`index.html`（HTML/CSS/JS 全部）＋ `art/`（画像）。
-- **土台**：`kazuyukikonuma/shimajiro-stageplay-digest` の分割スクロールを**忠実コピー**し、文字と画像だけ P14 用に差し替え済。色・フォント・**ページ送りボタン**・cover/outro・演出は shimajiro のまま。
+- **土台**：`kazuyukikonuma/shimajiro-stageplay-digest` の分割スクロールを**忠実コピー**し、文字と画像を P14 用に差し替え。フォント・**ページ送りボタン**・分割スクロールの仕組みは shimajiro のまま。**差分**＝galaxy 演出（流星/グロー/爆発）を削除、中間パネルを黒→温かいクリーム地＋濃い文字に、cover/outro のテキストを下寄せに変更（→ §1 参照）。
 - **画像5枚アップ済**（手繪動畫電影風）：`art/hero.jpg` `mid1.jpg` `mid2.jpg` `mid3.jpg` `ending.jpg`。
 
 ## 1. ★ すぐやる修正（TODO・上から順に）
-- [ ] **cover / outro の galaxy 演出を消す**（最優先）。暖かい絵の上に**白い流星**と暗い爆発グローが乗っていて変。`index.html` の `<div class="cover" id="cover">` と `<div class="outro" id="outro">` の中の `<div class="burst">` `<div class="glow">` `<div class="meteors">...</div>` を削除（テキスト `cover-inner`・ボタン `cover-cue` は残す）。
-- [ ] **mid2 の写真位置**：`mid2.jpg` はやや縦長（3:4）でステージで顔が切れ気味。該当 `<section ... data-bg="art/mid2.jpg" data-pos="center 45%">` の `data-pos` を `center 32%` くらいに（上寄せ）。
-- [ ] **トーン調整（任意）**：暗色→明るく等。CSS 冒頭 `:root{ --paper / --black / --gold / --cyan ... }` の色を変える。
-- [ ] **参考用 png の整理（任意）**：`art/` の `4books.png` `all.png` `babyS1.png` `book1〜4.jpg` `P14主機.png` は LP 未使用（GPTへの参考写真）。消しても表示に影響なし。
+- [x] **cover / outro の galaxy 演出を消す**（済）。`<div class="burst">` `<div class="glow">` `<div class="meteors">` を cover/outro から削除。テキストとボタンは残置。※CSS の `.meteor/.glow/.burst` 定義は未使用のまま残置（対応要素が無いので無害）。
+- [x] **mid2 の写真位置**（済）。`data-bg="art/mid2.jpg"` の `data-pos` を `center 45%` → `center 32%`（上寄せ）に変更。
+- [x] **トーン調整**（済）。中間3ページの文字ベースを **黒→温かいクリーム地＋濃い文字**に。`:root` に `--cream:#f6efe0` `--ink:#33291f` `--ink-soft` `--gold-ink:#9a7420` を追加し、`.scroller` を `background:var(--cream);color:var(--ink)`、`p`=`--ink-soft`、`.idx`=`--gold-ink` に。`.stage::after` の下端グラデを黒→クリームにして写真と文字帯の境目をブレンド。cover/outro のテキストは競合していた `cover-inner` クラスを外し `cover-text`（下寄せ）に統一。
+- [ ] **参考用 png の整理（任意・未）**：`art/` の `4books.png` `all.png` `babyS1.png` `book1〜4.jpg` `P14主機.png` は LP 未使用（GPTへの参考写真）。消しても表示に影響なし。
+- [ ] **写真とクリーム地の境目（要確認）**：mid 画像は元々「黒帯に溶ける」前提。クリーム地で境目が不自然なら `.stage::after` の下端 `rgba(246,239,224,.94)` の割合や、画像側の作り直し（§5）で調整。
 
 ## 2. 構造マップ（どこを直すか）
 - **開幕（全画面）**＝`<div class="cover" id="cover" style="...hero.jpg">` … 大標=`.cover-h1`／一句=`.cover-sub`／ボタン=`.cover-cue`。
