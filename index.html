@@ -86,10 +86,9 @@
     /* 退場：本編へ激しく突入（たっぷり長めに） */
     .cover .burst{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;
       background:radial-gradient(circle at 50% 40%,#fff,rgba(255,243,214,.7) 28%,rgba(101,216,255,.25) 52%,transparent 72%)}
-    .cover.out{pointer-events:none;animation:coverBlast 1.5s cubic-bezier(.5,0,.2,1) forwards}
-    .cover.out .burst{animation:burst 1.2s ease-out forwards}
-    .cover.out .cover-logo{animation:logoBlast 1.3s cubic-bezier(.45,0,.2,1) forwards}
-    .cover.out .meteor{animation-duration:.4s!important}
+    /* 退場：落ち着いたゆっくりディゾルブ（クロスフェード）で本編へ */
+    .cover.out{pointer-events:none;animation:coverDissolve 1.4s ease forwards}
+    @keyframes coverDissolve{from{opacity:1}to{opacity:0}}
     .cover.gone{display:none}
     @keyframes coverBlast{
       0%{opacity:1;transform:scale(1) translate(0,0) rotate(0)}
@@ -164,7 +163,7 @@
     .block{position:relative;min-height:100%;padding:clamp(22px,6.5vw,38px);padding-right:76px;padding-bottom:clamp(96px,26vw,140px);display:flex;flex-direction:column;
       justify-content:center;gap:13px;border-top:1px solid rgba(154,116,32,.24);scroll-snap-align:start}
     /* 巧虎ベビー装飾（各シーン左下・文字の下の余白に置く飾り・押せない） */
-    .scene-deco{position:absolute;left:clamp(14px,4.5vw,28px);bottom:clamp(8px,2.4vw,14px);
+    .scene-deco{position:absolute;right:clamp(14px,4.5vw,28px);bottom:clamp(8px,2.4vw,14px);
       width:clamp(66px,17vw,96px);height:auto;z-index:1;pointer-events:none;
       filter:drop-shadow(0 8px 13px rgba(51,41,31,.18))}
     .block .reveal{position:relative;z-index:2}
@@ -329,14 +328,16 @@
     .buy:focus-visible{outline:2px solid var(--gold-ink);outline-offset:4px}
     .fineprint{margin-top:11px;font-size:11px;color:rgba(51,41,31,.6);line-height:1.6}
 
-    /* 商品ロゴ（巧虎雙語點讀圖鑑）：hero＝人物の下の空き地に配置（被り回避）／Scene7＝商品名 */
-    .cover-brand{position:absolute;left:0;right:0;bottom:23%;z-index:2;
-      display:flex;justify-content:center;padding:0 26px;pointer-events:none}
+    /* 商品ロゴ（巧虎雙語點讀圖鑑）：hero＝人物の下の空き地に配置（被り回避・遅れて収まる演出）／Scene7＝商品名 */
+    .cover-brand{position:absolute;left:0;right:0;bottom:24%;z-index:2;
+      display:flex;justify-content:center;padding:0 26px;pointer-events:none;opacity:0}
+    body.cover-go .cover-brand{animation:brandSettle 1.1s cubic-bezier(.2,.8,.25,1) forwards 1.05s}
+    @keyframes brandSettle{0%{opacity:0;transform:translateY(16px) scale(.94)}60%{opacity:1}100%{opacity:1;transform:none}}
     .cover-brand::before{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
       width:min(98%,540px);height:196%;z-index:-1;
       background:radial-gradient(56% 52% at 50% 50%,rgba(248,242,230,.80),rgba(248,242,230,.4) 52%,transparent 74%);
       filter:blur(16px)}
-    .cover-logo-img{width:min(52vw,216px);max-width:92%;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.28))}
+    .cover-logo-img{width:min(44vw,182px);max-width:92%;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.28))}
     .prod-logo{width:min(300px,84%);height:auto;margin:6px 0 10px;filter:drop-shadow(0 6px 14px rgba(51,41,31,.14))}
   </style>
 </head>
@@ -359,23 +360,22 @@
     <div class="layer"></div>
     <div class="layer"></div>
     <div class="flash"></div>
-    <div class="meter"><span class="title">Opening</span><b class="count">01 / 03</b></div>
   </div>
 
   <!-- 下：スクロール文字 -->
   <main class="scroller">
     <!-- Scene 2：共感（子の姿） -->
-    <section class="block" data-bg="art/mid1.jpg" data-pos="center 45%" data-title="Story"><div class="reveal"><p class="idx">Scene 02</p><h2>主角不是規格，是會回話的巧虎</h2><p style="margin-top:10px">寶寶伸手時，巧虎把聲音帶回來。不是冷冰冰的機器，是會陪他一起發現的夥伴。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
+    <section class="block" data-bg="art/mid1.jpg" data-pos="center 45%" data-title="Story"><div class="reveal"><h2>主角不是規格，是會回話的巧虎</h2><p style="margin-top:10px">寶寶伸手時，巧虎把聲音帶回來。不是冷冰冰的機器，是會陪他一起發現的夥伴。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 3：四本圖鑑（概念・定稿） -->
-    <section class="block" data-bg="art/mid2.jpg" data-pos="center 32%" data-title="World"><div class="reveal"><p class="idx">Scene 03</p><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
+    <section class="block" data-bg="art/mid2.jpg" data-pos="center 32%" data-title="World"><div class="reveal"><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
     <!-- Scene 4：實物四冊（4books.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><p class="idx">Scene 04</p><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本厚頁雙語圖鑑，收錄約 1000 個中英詞彙──生活、動物、交通工具等，都是他每天看得到的世界。紙頁厚厚的，小手翻得動；從他最想指的那一頁，自然開始。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
+    <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本厚頁雙語圖鑑，收錄約 1000 個中英詞彙──生活、動物、交通工具等，都是他每天看得到的世界。紙頁厚厚的，小手翻得動；從他最想指的那一頁，自然開始。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 5：點讀機（machine.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><p class="idx">Scene 05</p><h2>會回話的，是巧虎自己</h2><p style="margin-top:10px">專為寶寶小手設計的巧虎造型點讀主機。握著巧虎往圖上一點，中英雙語、真實音效與唸謠就回來了──他伸手，世界就回應。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
+    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><h2>會回話的，是巧虎自己</h2><p style="margin-top:10px">專為寶寶小手設計的巧虎造型點讀主機。握著巧虎往圖上一點，中英雙語、真實音效與唸謠就回來了──他伸手，世界就回應。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
     <!-- Scene 6：機能の価値（定稿） -->
-    <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><p class="idx">Scene 06</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
+    <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 7：全套内容（all.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><p class="idx">Scene 07</p><img class="prod-logo" src="art/logo.png" alt="巧虎雙語點讀圖鑑（寶寶第一套雙語點讀書）"><h2>打開箱子，全部都在這裡</h2>
+    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><img class="prod-logo" src="art/logo.png" alt="巧虎雙語點讀圖鑑（寶寶第一套雙語點讀書）"><h2>打開箱子，全部都在這裡</h2>
       <ul class="pack">
         <li><b>點讀巧虎</b>主機 ×1</li>
         <li><b>雙語點讀圖鑑</b> ×4 本（約 1000 個中英詞彙）</li>
@@ -485,8 +485,8 @@
       function setStage(b){
         var src=b.dataset.bg,pos=b.dataset.pos||"center",fit=b.dataset.fit||"cover";
         var i=blocks.indexOf(b);
-        titleEl.textContent=b.dataset.title||"";
-        countEl.textContent=String(i+1).padStart(2,"0")+" / "+String(blocks.length).padStart(2,"0");
+        if(titleEl)titleEl.textContent=b.dataset.title||"";
+        if(countEl)countEl.textContent=String(i+1).padStart(2,"0")+" / "+String(blocks.length).padStart(2,"0");
         if(stageLogo){stageLogo.classList.toggle("show",!!b.querySelector(".idx"));}
         if(src===curBg){layers.forEach(function(l){l.style.backgroundPosition=pos;});return;}
         curBg=src;
@@ -559,11 +559,9 @@
       var cover=document.getElementById("cover"),coverDone=false;
       function dismissCover(){
         if(coverDone||!cover)return;coverDone=true;
-        cover.classList.add("out");
-        body.classList.add("entering");
-        setTimeout(function(){body.classList.remove("entering");},1350);
-        setTimeout(function(){cover.classList.add("gone");},1600);
-        setTimeout(showHint,1600);   // 本編突入後に「ボタンで進む」ヒントを一度だけ
+        cover.classList.add("out");   // ゆっくりディゾルブで退場（flash/zoom無し）
+        setTimeout(function(){cover.classList.add("gone");},1500);
+        setTimeout(showHint,1700);   // 本編突入後に「ボタンで進む」ヒントを一度だけ
       }
       if(cover){
         cover.addEventListener("click",dismissCover);   // ボタン操作のみ：スワイプ/ホイール自走は無効
