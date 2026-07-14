@@ -13,6 +13,7 @@
     :root{
       --paper:#f5efe2;--soft:rgba(245,239,226,.78);--dim:rgba(245,239,226,.56);
       --gold:#d7b46a;--pink:#df4c80;--cyan:#65d8ff;--black:#040509;
+      --cream:#f6efe0;--ink:#33291f;--ink-soft:rgba(51,41,31,.82);--gold-ink:#9a7420;
       --font:"Yu Gothic","Hiragino Kaku Gothic ProN","Meiryo","Microsoft JhengHei UI",sans-serif;
       --mono:"Arial","Helvetica Neue",sans-serif;
       --stage:50svh;
@@ -140,7 +141,7 @@
       opacity:0;transform:scale(1.05);transition:opacity .85s ease,transform 1.5s ease,background-position 1.2s ease;will-change:opacity,transform}
     .stage .layer.on{opacity:1;transform:scale(1)}
     .stage::after{content:"";position:absolute;inset:0;pointer-events:none;
-      background:linear-gradient(180deg,rgba(2,3,7,.16),transparent 22%,transparent 72%,rgba(4,5,9,.92))}
+      background:linear-gradient(180deg,rgba(2,3,7,.10),transparent 20%,transparent 66%,rgba(246,239,224,.94))}
     .stage .meter{position:absolute;left:clamp(14px,4vw,22px);bottom:12px;z-index:2;
       display:flex;gap:10px;align-items:center;color:rgba(245,239,226,.82);
       font-size:10px;letter-spacing:.18em;text-transform:uppercase}
@@ -158,20 +159,20 @@
 
     /* ===== 下：スクロールする文字 ===== */
     .scroller{position:fixed;left:0;right:0;top:var(--stage);bottom:0;z-index:2;overflow-y:auto;
-      -webkit-overflow-scrolling:touch;background:var(--black);scroll-snap-type:y proximity}
+      -webkit-overflow-scrolling:touch;background:var(--cream);color:var(--ink);scroll-snap-type:y proximity}
     .block{min-height:100%;padding:clamp(22px,6.5vw,38px);padding-right:76px;display:flex;flex-direction:column;
-      justify-content:center;gap:13px;border-top:1px solid rgba(215,180,106,.16);scroll-snap-align:start}
+      justify-content:center;gap:13px;border-top:1px solid rgba(154,116,32,.24);scroll-snap-align:start}
     .block:first-child{border-top:0}
     .block.tight{padding-top:13px;padding-bottom:13px}
     .block > *{max-width:640px}
 
     .logo{width:min(220px,56%);margin-bottom:2px;filter:drop-shadow(0 10px 24px rgba(0,0,0,.5))}
     .eyebrow{color:var(--gold);font-size:10px;letter-spacing:.26em;text-transform:uppercase}
-    .idx{color:var(--gold);font-size:11px;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
-    .idx::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+    .idx{color:var(--gold-ink);font-size:11px;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+    .idx::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,var(--gold-ink),transparent)}
     h1{font-size:clamp(28px,7.6vw,42px);font-weight:800;line-height:1.14;text-wrap:balance}
     h2{font-size:clamp(23px,6.2vw,33px);font-weight:800;line-height:1.2;text-wrap:balance}
-    p{font-size:clamp(13.5px,3.7vw,16px);line-height:1.92;color:rgba(245,239,226,.92)}
+    p{font-size:clamp(13.5px,3.7vw,16px);line-height:1.92;color:var(--ink-soft)}
     .lead{color:rgba(245,239,226,.9)}
     .note{color:rgba(245,239,226,.6);font-size:12.5px;line-height:1.8}
 
@@ -297,7 +298,7 @@
 
   <!-- オープニング：全画面ヒーロー（ロゴが飛び出す） -->
   <div class="cover" id="cover" style="background-image:url('art/hero.jpg')">
-    <div class="cover-inner cover-text">
+    <div class="cover-text">
       <h1 class="cover-h1">當他想再點一次，巧虎就把世界說給他聽</h1>
       <p class="cover-sub">巧虎＋4本圖鑑，一點就聽見中英雙語、真實音效與唸謠。</p>
     </div>
@@ -321,7 +322,7 @@
 
   <!-- エンディング：全画面ヒーロー（クレジット後）→ タップ/スクロールで最初へループ -->
   <div class="outro" id="outro" style="background-image:url('art/ending.jpg')">
-    <div class="cover-inner cover-text">
+    <div class="cover-text">
       <h1 class="cover-h1">不是現在就要他記住很多英文，</h1>
       <p class="cover-sub">是讓他每次把手伸向世界，都聽見一個能和你一起發現的回應。</p>
     </div>
