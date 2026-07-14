@@ -161,8 +161,13 @@
     /* ボタン操作のみ：指スワイプ/ホイールでの自走を無効化（JSのプログラム送りは動く） */
     .scroller{position:fixed;left:0;right:0;top:var(--stage);bottom:0;z-index:2;overflow:hidden;
       background:var(--cream);color:var(--ink);touch-action:none;overscroll-behavior:none}
-    .block{min-height:100%;padding:clamp(22px,6.5vw,38px);padding-right:76px;display:flex;flex-direction:column;
+    .block{position:relative;min-height:100%;padding:clamp(22px,6.5vw,38px);padding-right:76px;padding-bottom:clamp(96px,26vw,140px);display:flex;flex-direction:column;
       justify-content:center;gap:13px;border-top:1px solid rgba(154,116,32,.24);scroll-snap-align:start}
+    /* 巧虎ベビー装飾（各シーン左下・文字の下の余白に置く飾り・押せない） */
+    .scene-deco{position:absolute;left:clamp(14px,4.5vw,28px);bottom:clamp(8px,2.4vw,14px);
+      width:clamp(66px,17vw,96px);height:auto;z-index:1;pointer-events:none;
+      filter:drop-shadow(0 8px 13px rgba(51,41,31,.18))}
+    .block .reveal{position:relative;z-index:2}
     .block:first-child{border-top:0}
     .block.tight{padding-top:13px;padding-bottom:13px}
     .block > *{max-width:640px}
@@ -360,15 +365,15 @@
   <!-- 下：スクロール文字 -->
   <main class="scroller">
     <!-- Scene 2：共感（子の姿） -->
-    <section class="block" data-bg="art/mid1.jpg" data-pos="center 45%" data-title="Story"><div class="reveal"><p class="idx">Scene 02</p><h2>主角不是規格，是會回話的巧虎</h2><p style="margin-top:10px">寶寶伸手時，巧虎把聲音帶回來。不是冷冰冰的機器，是會陪他一起發現的夥伴。</p></div></section>
+    <section class="block" data-bg="art/mid1.jpg" data-pos="center 45%" data-title="Story"><div class="reveal"><p class="idx">Scene 02</p><h2>主角不是規格，是會回話的巧虎</h2><p style="margin-top:10px">寶寶伸手時，巧虎把聲音帶回來。不是冷冰冰的機器，是會陪他一起發現的夥伴。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 3：四本圖鑑（概念・定稿） -->
-    <section class="block" data-bg="art/mid2.jpg" data-pos="center 32%" data-title="World"><div class="reveal"><p class="idx">Scene 03</p><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div></section>
+    <section class="block" data-bg="art/mid2.jpg" data-pos="center 32%" data-title="World"><div class="reveal"><p class="idx">Scene 03</p><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
     <!-- Scene 4：實物四冊（4books.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><p class="idx">Scene 04</p><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本厚頁雙語圖鑑，收錄約 1000 個中英詞彙──生活、動物、交通工具等，都是他每天看得到的世界。紙頁厚厚的，小手翻得動；從他最想指的那一頁，自然開始。</p></div></section>
+    <section class="block" data-bg="art/4books.png" data-pos="center 42%" data-fit="contain" data-title="4 Books"><div class="reveal"><p class="idx">Scene 04</p><h2>翻開任一本，都是他想指的那一頁</h2><p style="margin-top:10px">四本厚頁雙語圖鑑，收錄約 1000 個中英詞彙──生活、動物、交通工具等，都是他每天看得到的世界。紙頁厚厚的，小手翻得動；從他最想指的那一頁，自然開始。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 5：點讀機（machine.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><p class="idx">Scene 05</p><h2>會回話的，是巧虎自己</h2><p style="margin-top:10px">專為寶寶小手設計的巧虎造型點讀主機。握著巧虎往圖上一點，中英雙語、真實音效與唸謠就回來了──他伸手，世界就回應。</p></div></section>
+    <section class="block" data-bg="art/machine.png" data-pos="center 40%" data-fit="contain" data-title="Player"><div class="reveal"><p class="idx">Scene 05</p><h2>會回話的，是巧虎自己</h2><p style="margin-top:10px">專為寶寶小手設計的巧虎造型點讀主機。握著巧虎往圖上一點，中英雙語、真實音效與唸謠就回來了──他伸手，世界就回應。</p></div><img class="scene-deco" src="art/babyS2.png" alt="" aria-hidden="true"></section>
     <!-- Scene 6：機能の価値（定稿） -->
-    <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><p class="idx">Scene 06</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div></section>
+    <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><p class="idx">Scene 06</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div><img class="scene-deco" src="art/babyS1.png" alt="" aria-hidden="true"></section>
     <!-- Scene 7：全套内容（all.png・透過→クリーム地） -->
     <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><p class="idx">Scene 07</p><img class="prod-logo" src="art/logo.png" alt="巧虎雙語點讀圖鑑（寶寶第一套雙語點讀書）"><h2>打開箱子，全部都在這裡</h2>
       <ul class="pack">
