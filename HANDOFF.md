@@ -15,18 +15,24 @@
 - [x] **トーン調整**（済）。中間3ページの文字ベースを **黒→温かいクリーム地＋濃い文字**に。`:root` に `--cream:#f6efe0` `--ink:#33291f` `--ink-soft` `--gold-ink:#9a7420` を追加し、`.scroller` を `background:var(--cream);color:var(--ink)`、`p`=`--ink-soft`、`.idx`=`--gold-ink` に。`.stage::after` の下端グラデを黒→クリームにして写真と文字帯の境目をブレンド。cover/outro のテキストは競合していた `cover-inner` クラスを外し `cover-text`（下寄せ）に統一。
 - [ ] **未使用の演出用素材＝LP へ活用検討（削除しない）**：以下は LP 未配置だが**演出（掲載）に使える実素材**。商品紹介セクション等で使える。
   - `all.png`＝全セット実写（4冊＋育兒誌＋點讀機本体・**背景透過**）
-  - `4books.png`＝點讀圖鑑4冊を立てた実写（**背景透過**）
-  - `P14主機.png`＝巧虎點讀機 本体のみ実写（**背景透過**）
-  - `babyS1.png`＝巧虎ベビー 線画イラスト（**背景透過**・装飾/CTA向き）
-  - `book1〜4.jpg`＝各圖鑑の表紙（①獅子=動物/交通/食物 ②バス=交通/玩具/生活/餐具/食物/蔬果 ③靴=衣物/動物/牧場/身體/臉/公園 ④ペンギン=水族/植物/動物/季節/形狀花紋/顏色）。mid2「四本圖鑑」の補強に◎
+  - `4books.png`＝點讀圖鑑4冊を立てた実写（**背景透過**）※**Scene4 で使用中**
+  - `machine.png`（旧 `P14主機.png` からリネーム）＝巧虎點讀機 本体のみ実写（**背景透過**）※**Scene5 で使用中**
+  - `all.png`＝全セット実写（4冊＋育兒誌＋點讀機・**背景透過**）※**Scene7 で使用中**
+  - `babyS1.png`＝巧虎ベビー 線画イラスト（**背景透過**・装飾/CTA向き）※未使用（今後の装飾用に温存）
+  - `book1〜4.jpg`＝各圖鑑の表紙（①獅子=動物/交通/食物 ②バス=交通/玩具/生活/餐具/食物/蔬果 ③靴=衣物/動物/牧場/身體/臉/公園 ④ペンギン=水族/植物/動物/季節/形狀花紋/顏色）※未使用（book カルーセル等に）
   - ⚠️ すべて**巧虎IP官方素材**。對外公開前は人眼で最終チェック必須。
-- [ ] **写真とクリーム地の境目（要確認）**：mid 画像は元々「黒帯に溶ける」前提。クリーム地で境目が不自然なら `.stage::after` の下端 `rgba(246,239,224,.94)` の割合や、画像側の作り直し（§5）で調整。
+- [ ] **【要8TDB検証】新規3シーンのコピー＆CTA/価格**：Scene4/5/7 の見出し・本文は 8TDB 未接続時の**暫定コピー**。商品知見・CRO・出典ルールで要検証。購入 CTA・価格・購入リンクは未設定（outro ボタンは暫定「看看完整內容」）。→ 8TDB 再接続後に確定。
+- [ ] **写真とクリーム地の境目（要確認）**：mid 画像は元々「黒帯に溶ける」前提。クリーム地で境目が不自然なら `.stage::after` の下端 `rgba(246,239,224,.82)` の割合や、画像側の作り直し（§5）で調整。
+- [ ] **商品PNGの見え方（要確認）**：Scene4/5/7 は透過PNGを `background-size:contain` でクリーム地に表示。小さい/大きい・位置は各 `<section>` の `data-pos`（例 `center 40%`）で調整可。
 
-## 2. 構造マップ（どこを直すか）
-- **開幕（全画面）**＝`<div class="cover" id="cover" style="...hero.jpg">` … 大標=`.cover-h1`／一句=`.cover-sub`／ボタン=`.cover-cue`。
-- **中間3ページ**＝`<main class="scroller">` 内の `<section class="block" data-bg="art/midN.jpg" data-pos="center 45%" data-title="…">` × 3。中の `<h2>`=見出し、`<p>`=本文。`data-pos` で写真の見せる位置を上下調整。上の固定写真は `.stage` がスクロールに同期して切替。
-- **結末（全画面）**＝`<div class="outro" id="outro" style="...ending.jpg">` … 大標=`.cover-h1`／一句=`.cover-sub`／ボタン=`.cover-cue`。
-- **ページ送りボタン**＝`<div class="pager-nav">`（`#pagerUp` `#pagerDown`）。
+## 2. 構造マップ（全8シーン）
+LP は「cover（Scene1）＋ scroller 6ブロック（Scene2-7）＋ outro（Scene8）」の分割スクロール。
+- **Scene1 開幕（全画面）**＝`<div class="cover" id="cover" ...hero.jpg>` … 大標=`.cover-h1`／一句=`.cover-sub`（下寄せ）／ボタン=`.cover-cue`。
+- **Scene2-7 中間6ブロック**＝`<main class="scroller">`（クリーム地＋濃い文字）内の `<section class="block" data-bg="art/…" data-pos="…" [data-fit="contain"] data-title="…">` × 6。中の `.idx`=通し番号／`<h2>`=見出し／`<p>`=本文。
+  - 上半分の固定写真 `.stage` がスクロールに同期して切替。**写真の位置**＝`data-pos`。**透過PNG商品**は `data-fit="contain"`（Scene4=4books/5=machine/7=all）。イラスト(mid1-3)は指定なし＝cover。
+  - 順序：2共感(mid1)／3四本圖鑑・概念(mid2)／4実物4冊(4books)／5點讀機(machine)／6機能(mid3)／7全套内容(all)。
+- **Scene8 結末（全画面）**＝`<div class="outro" id="outro" ...ending.jpg>` … 大標=`.cover-h1`／一句=`.cover-sub`（下寄せ）／ボタン=`.cover-cue`。
+- **ページ送りボタン**＝`<div class="pager-nav">`（`#pagerUp` `#pagerDown`）。ブロック数は自動（meter の `0X / 06` も自動）。
 
 ## 3. スマホでの直し方
 1. GitHub アプリで `index.html` を開く →（鉛筆）編集 → 直す → **Commit → `main`**。
