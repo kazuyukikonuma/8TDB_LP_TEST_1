@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>巧虎雙語點讀圖鑑｜LP（測試）</title>
+  <meta name="description" content="巧虎雙語點讀圖鑑 LP 測試（分割捲動）。">
+  <meta name="theme-color" content="#040509">
+  <link rel="icon" type="image/png" href="art/favicon.png">
+  <link rel="apple-touch-icon" href="art/favicon.png">
+  <link rel="preload" as="image" href="art/hero.jpg" fetchpriority="high">
+  <style>
+    :root{
+      --paper:#f5efe2;--soft:rgba(245,239,226,.78);--dim:rgba(245,239,226,.56);
+      --gold:#d7b46a;--pink:#df4c80;--cyan:#65d8ff;--black:#040509;
+      --font:"Yu Gothic","Hiragino Kaku Gothic ProN","Meiryo","Microsoft JhengHei UI",sans-serif;
+      --mono:"Arial","Helvetica Neue",sans-serif;
+      --stage:50svh;
+    }
+    *{box-sizing:border-box;margin:0}
+    html,body{height:100%;overflow:hidden}
+    html{background:var(--black);color-scheme:dark}
+    body{background:var(--black);color:var(--paper);font-family:var(--font);line-height:1.7;-webkit-font-smoothing:antialiased}
+    img{display:block;max-width:100%}
+    a{color:var(--cyan)}
+
+    /* preloader */
+    .preloader{position:fixed;inset:0;z-index:120;display:grid;place-items:center;
+      background:radial-gradient(60% 50% at 50% 42%,rgba(101,216,255,.12),transparent 60%),#020306;
+      transition:opacity .6s ease,visibility .6s ease}
+    .preloader img{width:min(58vw,260px);opacity:0;transform:translateY(8px) scale(.96);animation:pin .8s ease forwards 80ms}
+    @keyframes pin{to{opacity:1;transform:none}}
+    body.is-ready .preloader{opacity:0;visibility:hidden;pointer-events:none}
+
+    /* ===== オープニング：全画面ヒーロー ===== */
+    .cover{position:fixed;inset:0;z-index:60;display:grid;place-items:center;text-align:center;cursor:pointer;
+      background:#03040a url('art/hero.jpg') center/cover no-repeat;
+      opacity:0;transition:opacity .9s ease}
+    body.is-ready .cover{opacity:1}
+    .cover .glow{position:absolute;left:50%;top:18%;width:min(90vw,480px);aspect-ratio:1;transform:translate(-50%,-50%) scale(.6);
+      background:radial-gradient(circle,rgba(101,216,255,.36),rgba(223,76,128,.16) 42%,transparent 66%);
+      filter:blur(8px);opacity:0;z-index:1;pointer-events:none}
+    .cover-inner{position:absolute;top:max(34px,calc(env(safe-area-inset-top) + 22px));left:0;right:0;z-index:2;
+      display:flex;justify-content:center;padding:0 22px}
+    .logo-wrap{position:relative;display:inline-block;line-height:0}
+    .cover-logo{width:min(84vw,430px);filter:drop-shadow(0 18px 40px rgba(0,0,0,.6));
+      opacity:0;transform:scale(.3);transform-origin:center top;will-change:transform,opacity}
+    /* ロゴまわりのキラキラ縁取り */
+    .spark{position:absolute;width:clamp(10px,3.6vw,17px);aspect-ratio:1;pointer-events:none;background:#fff;
+      clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%);
+      filter:drop-shadow(0 0 5px rgba(255,236,170,.95));opacity:0;transform:scale(.2);
+      animation:twk 2.6s ease-in-out infinite}
+    .spark.c{filter:drop-shadow(0 0 6px rgba(101,216,255,.95))}
+    .spark.g{filter:drop-shadow(0 0 6px rgba(223,76,128,.92))}
+    @keyframes twk{0%,100%{opacity:0;transform:scale(.2) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(90deg)}}
+    /* 流星 */
+    .meteors{position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none}
+    .meteor{position:absolute;width:clamp(160px,44vw,300px);height:4px;border-radius:4px;
+      background:linear-gradient(90deg,#fff,rgba(255,255,255,0));filter:drop-shadow(0 0 10px rgba(255,255,255,.55));
+      opacity:0;transform:rotate(-45deg) translateX(0);animation:meteor linear infinite}
+    .meteor::before{content:"";position:absolute;top:-2px;left:0;width:8px;height:8px;border-radius:50%;
+      background:#fff;box-shadow:0 0 16px 4px rgba(255,255,255,.85)}
+    @keyframes meteor{0%{opacity:0;transform:rotate(-45deg) translateX(0)}8%{opacity:1}86%{opacity:1}100%{opacity:0;transform:rotate(-45deg) translateX(-780px)}}
+    .meteor:nth-child(1){top:5%;left:28%;animation-duration:3.1s;animation-delay:.1s}
+    .meteor:nth-child(2){top:-3%;left:68%;animation-duration:2.6s;animation-delay:1.2s}
+    .meteor:nth-child(3){top:10%;left:92%;animation-duration:3.7s;animation-delay:.7s}
+    .meteor:nth-child(4){top:0%;left:52%;animation-duration:2.9s;animation-delay:2.1s;width:clamp(120px,32vw,200px)}
+    .meteor:nth-child(5){top:16%;left:82%;animation-duration:3.3s;animation-delay:1.7s}
+    .meteor:nth-child(6){top:-5%;left:42%;animation-duration:4s;animation-delay:.4s;width:clamp(120px,32vw,200px)}
+    .cover-cue{position:absolute;left:0;right:0;bottom:max(26px,env(safe-area-inset-bottom));z-index:2;
+      display:flex;flex-direction:column;align-items:center;gap:9px;opacity:0;background:none;border:0;cursor:pointer}
+    .cover-cue:focus-visible{outline:2px solid var(--cyan);outline-offset:6px}
+    .cue-label{color:#fff;font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+      text-shadow:0 1px 6px rgba(0,0,0,.7),0 0 10px rgba(0,0,0,.45)}
+    .cover-cue .chev{width:15px;height:15px;border-right:1.8px solid var(--gold);border-bottom:1.8px solid var(--gold);
+      filter:drop-shadow(0 1px 4px rgba(0,0,0,.6));transform:rotate(45deg);animation:bob 1.6s ease-in-out infinite}
+    @keyframes bob{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(4px,4px)}}
+    /* ロゴが飛び出す */
+    body.cover-go #cover .cover-logo{animation:logoPop 1.1s cubic-bezier(.2,.9,.25,1.25) forwards .15s}
+    body.cover-go #cover .glow{animation:glowPulse 1.5s ease forwards .1s}
+    body.cover-go .cover-cue{animation:fadeUp .7s ease forwards 1s}
+    @keyframes logoPop{0%{opacity:0;transform:scale(.3)}55%{opacity:1;transform:scale(1.12)}72%{transform:scale(.96)}100%{opacity:1;transform:scale(1)}}
+    @keyframes glowPulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}50%{opacity:1}100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    /* 退場：本編へ激しく突入（たっぷり長めに） */
+    .cover .burst{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;
+      background:radial-gradient(circle at 50% 40%,#fff,rgba(255,243,214,.7) 28%,rgba(101,216,255,.25) 52%,transparent 72%)}
+    .cover.out{pointer-events:none;animation:coverBlast 1.5s cubic-bezier(.5,0,.2,1) forwards}
+    .cover.out .burst{animation:burst 1.2s ease-out forwards}
+    .cover.out .cover-logo{animation:logoBlast 1.3s cubic-bezier(.45,0,.2,1) forwards}
+    .cover.out .meteor{animation-duration:.4s!important}
+    .cover.gone{display:none}
+    @keyframes coverBlast{
+      0%{opacity:1;transform:scale(1) translate(0,0) rotate(0)}
+      6%{transform:scale(1.03) translate(-9px,5px) rotate(-.7deg)}
+      12%{transform:scale(1.04) translate(9px,-5px) rotate(.7deg)}
+      18%{transform:scale(1.05) translate(-8px,5px) rotate(-.6deg)}
+      24%{transform:scale(1.06) translate(8px,-4px) rotate(.6deg)}
+      30%{transform:scale(1.07) translate(-5px,3px) rotate(-.4deg)}
+      36%{transform:scale(1.08) translate(0,0) rotate(0)}
+      44%{transform:scale(1.01)}
+      100%{opacity:0;transform:scale(2.3) rotate(1.5deg)}}
+    @keyframes burst{0%{opacity:0;transform:scale(.4)}
+      28%{opacity:.35;transform:scale(.8)}
+      46%{opacity:1;transform:scale(1.15)}
+      64%{opacity:.7}
+      100%{opacity:0;transform:scale(2.1)}}
+    @keyframes logoBlast{0%{transform:scale(1);opacity:1}
+      30%{transform:scale(1.16)}44%{transform:scale(1.04)}
+      100%{transform:scale(3.2);opacity:0}}
+    /* 全画面ホワイトアウト・フラッシュ */
+    .flashfx{position:fixed;inset:0;z-index:80;pointer-events:none;opacity:0;
+      background:radial-gradient(circle at 50% 42%,#fff,rgba(255,250,235,.94) 38%,rgba(101,216,255,.5) 64%,transparent 84%)}
+    body.entering .flashfx{animation:flashfx 1.25s ease-out forwards}
+    @keyframes flashfx{0%{opacity:0;transform:scale(.5)}
+      30%{opacity:.45;transform:scale(.85)}
+      48%{opacity:1;transform:scale(1.2)}
+      66%{opacity:.6}
+      100%{opacity:0;transform:scale(2.2)}}
+    /* 本編側のズームイン突入 */
+    body.entering .scroller,body.entering .stage{animation:enterZoom 1.3s cubic-bezier(.2,.7,.2,1)}
+    @keyframes enterZoom{0%{transform:scale(1.18);opacity:0;filter:brightness(2.2)}
+      40%{opacity:.4}100%{transform:none;opacity:1;filter:none}}
+
+    /* ===== エンディング：全画面ヒーロー（オープニングと対） ===== */
+    .outro{position:fixed;inset:0;z-index:65;pointer-events:none;
+      background:#03040a url('art/hero.jpg') center/cover no-repeat;
+      opacity:0;visibility:hidden;transition:opacity .8s ease,visibility .8s ease}
+    .outro.show{opacity:1;visibility:visible;pointer-events:auto;cursor:pointer}
+    .outro.out{opacity:0;transform:scale(1.06);transition:opacity .7s ease,transform .8s ease}
+    .outro .glow{position:absolute;left:50%;top:18%;width:min(90vw,480px);aspect-ratio:1;transform:translate(-50%,-50%) scale(.6);
+      background:radial-gradient(circle,rgba(101,216,255,.36),rgba(223,76,128,.16) 42%,transparent 66%);
+      filter:blur(8px);opacity:0;z-index:1;pointer-events:none}
+    .outro.go .glow{animation:glowPulse 1.5s ease forwards .1s}
+    .outro.go .cover-logo{animation:logoPop 1.1s cubic-bezier(.2,.9,.25,1.25) forwards .15s}
+
+    /* ===== 上：固定アート ステージ ===== */
+    .stage{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:1;overflow:hidden;background:#05060a}
+    .stage .layer{position:absolute;inset:0;background-size:cover;background-position:center;
+      opacity:0;transform:scale(1.05);transition:opacity .85s ease,transform 1.5s ease,background-position 1.2s ease;will-change:opacity,transform}
+    .stage .layer.on{opacity:1;transform:scale(1)}
+    .stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(180deg,rgba(2,3,7,.16),transparent 22%,transparent 72%,rgba(4,5,9,.92))}
+    .stage .meter{position:absolute;left:clamp(14px,4vw,22px);bottom:12px;z-index:2;
+      display:flex;gap:10px;align-items:center;color:rgba(245,239,226,.82);
+      font-size:10px;letter-spacing:.18em;text-transform:uppercase}
+    .stage .meter b{color:var(--gold);font-weight:400;font-variant-numeric:tabular-nums}
+    .flash{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:0;
+      background:linear-gradient(90deg,transparent,rgba(245,239,226,.16),transparent)}
+    .flash.go{animation:fl .6s ease}
+    @keyframes fl{0%{opacity:0;transform:translateX(-40%)}30%{opacity:.6}100%{opacity:0;transform:translateX(40%)}}
+    /* シーン中だけ左上に出るロゴ（スクロールで少し動く） */
+    .stage-logo{position:absolute;top:max(12px,env(safe-area-inset-top));left:clamp(12px,4vw,20px);z-index:4;
+      width:min(42vw,150px);opacity:0;transform:translate3d(0,-6px,0);
+      transition:opacity .55s ease;filter:drop-shadow(0 6px 16px rgba(0,0,0,.65));
+      pointer-events:none;will-change:transform,opacity}
+    .stage-logo.show{opacity:1}
+
+    /* ===== 下：スクロールする文字 ===== */
+    .scroller{position:fixed;left:0;right:0;top:var(--stage);bottom:0;z-index:2;overflow-y:auto;
+      -webkit-overflow-scrolling:touch;background:var(--black);scroll-snap-type:y proximity}
+    .block{min-height:100%;padding:clamp(22px,6.5vw,38px);padding-right:76px;display:flex;flex-direction:column;
+      justify-content:center;gap:13px;border-top:1px solid rgba(215,180,106,.16);scroll-snap-align:start}
+    .block:first-child{border-top:0}
+    .block.tight{padding-top:13px;padding-bottom:13px}
+    .block > *{max-width:640px}
+
+    .logo{width:min(220px,56%);margin-bottom:2px;filter:drop-shadow(0 10px 24px rgba(0,0,0,.5))}
+    .eyebrow{color:var(--gold);font-size:10px;letter-spacing:.26em;text-transform:uppercase}
+    .idx{color:var(--gold);font-size:11px;letter-spacing:.24em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+    .idx::before{content:"";width:34px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+    h1{font-size:clamp(28px,7.6vw,42px);font-weight:800;line-height:1.14;text-wrap:balance}
+    h2{font-size:clamp(23px,6.2vw,33px);font-weight:800;line-height:1.2;text-wrap:balance}
+    p{font-size:clamp(13.5px,3.7vw,16px);line-height:1.92;color:rgba(245,239,226,.92)}
+    .lead{color:rgba(245,239,226,.9)}
+    .note{color:rgba(245,239,226,.6);font-size:12.5px;line-height:1.8}
+
+    /* 公演情報 */
+    .info{margin-top:6px;border-top:1px solid rgba(215,180,106,.3)}
+    .row{display:grid;grid-template-columns:70px 1fr;gap:12px;padding:11px 0;border-bottom:1px solid rgba(245,239,226,.1)}
+    .k{color:var(--gold);font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding-top:3px}
+    .v{font-size:14px;line-height:1.55}.v em{display:block;color:rgba(245,239,226,.55);font-size:11px;font-style:normal;margin-top:2px}
+    .v a{text-decoration:none;border-bottom:1px solid rgba(101,216,255,.5)}
+
+    /* 数字 */
+    .nums{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;margin-top:8px;padding-top:18px;border-top:1px solid rgba(215,180,106,.32)}
+    .num{min-width:0}
+    .num strong{display:block;font-family:var(--mono);font-weight:400;font-size:clamp(23px,6.6vw,44px);line-height:.9;font-variant-numeric:tabular-nums;white-space:nowrap}
+    .num span{display:block;margin-top:8px;color:rgba(245,239,226,.62);font-size:11px;letter-spacing:.06em}
+
+    /* グラフ */
+    .chart{display:grid;gap:14px;margin-top:20px}
+    .bar{display:grid;grid-template-columns:78px 1fr 70px;gap:10px;align-items:center;font-size:12.5px}
+    .bar b{font-weight:600}
+    .track{position:relative;height:6px;border-radius:6px;background:rgba(245,239,226,.16)}
+    .track i{position:absolute;inset:0 auto 0 0;width:0;border-radius:6px;
+      background:linear-gradient(90deg,var(--gold),var(--cyan));box-shadow:0 0 18px rgba(101,216,255,.28);
+      transition:width 1.2s cubic-bezier(.18,.86,.26,1)}
+    .amt{text-align:right;color:rgba(245,239,226,.66);font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+    /* キャスト */
+    .cast-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px 10px;margin-top:12px;align-items:end}
+    .cast-grid.g2{grid-template-columns:repeat(2,1fr);gap:11px 18px}
+    .cast-grid.g2 .cast-pic{height:clamp(84px,21vw,122px)}
+    figure{margin:0;display:flex;flex-direction:column;align-items:center;text-align:center}
+    .cast-pic{height:clamp(108px,30vw,140px);display:flex;align-items:flex-end;justify-content:center;width:100%}
+    .cast-pic img{max-height:100%;max-width:100%;width:auto;height:auto;object-fit:contain;
+      filter:brightness(1.06) drop-shadow(0 14px 16px rgba(0,0,0,.5))}
+    figcaption{margin-top:10px}
+    figcaption strong{display:block;color:var(--paper);font-size:13px;font-weight:700}
+    figcaption span{display:block;color:rgba(245,239,226,.62);font-size:10px;margin-top:1px}
+    .cast-ph{height:clamp(108px,30vw,140px);width:100%;display:grid;place-content:center;gap:4px;
+      border:1px dashed rgba(215,180,106,.55);border-radius:10px;background:rgba(255,255,255,.04);text-align:center}
+    .cast-ph b{color:var(--paper);font-size:12px}.cast-ph small{color:var(--dim);font-size:9px}
+
+    /* 結末 */
+    .ending-btn{align-self:flex-start;min-height:44px;padding:0;margin-top:4px;border:0;background:none;
+      border-bottom:1px solid rgba(215,180,106,.85);color:var(--gold);font:inherit;font-size:13px;letter-spacing:.06em;cursor:pointer}
+    .ending-btn:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+    .secret{display:none;margin-top:14px;color:rgba(245,239,226,.86);font-size:clamp(13.5px,3.7vw,16px);line-height:1.9}
+    .ending.open .secret{display:block}
+
+    /* ページ送りボタン（右・中央：戻る／進む） */
+    .pager-nav{position:fixed;right:clamp(8px,2.6vw,16px);top:50%;transform:translateY(-50%);z-index:40;
+      display:flex;flex-direction:column;align-items:center;gap:11px}
+    .pager{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--gold);
+      background:linear-gradient(160deg,rgba(20,22,34,.55),rgba(6,8,14,.5));
+      -webkit-backdrop-filter:blur(10px) saturate(1.2);backdrop-filter:blur(10px) saturate(1.2);
+      border:1px solid rgba(215,180,106,.55);
+      box-shadow:0 10px 28px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18),inset 0 0 16px rgba(101,216,255,.12);
+      transition:opacity .3s ease,visibility .3s ease,transform .2s ease,box-shadow .3s ease;
+      -webkit-tap-highlight-color:transparent}
+    .pager::after{content:"";width:13px;height:13px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+      transform:translateY(-3px) rotate(45deg);animation:pbob 1.9s ease-in-out infinite}
+    .pager.up::after{transform:translateY(3px) rotate(-135deg);animation:pbobUp 1.9s ease-in-out infinite}
+    @keyframes pbob{0%,100%{transform:translateY(-4px) rotate(45deg)}50%{transform:translateY(1px) rotate(45deg)}}
+    @keyframes pbobUp{0%,100%{transform:translateY(4px) rotate(-135deg)}50%{transform:translateY(-1px) rotate(-135deg)}}
+    .pager:hover{box-shadow:0 10px 30px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.22),0 0 18px rgba(215,180,106,.35)}
+    .pager:active{transform:scale(.9)}
+    .pager:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
+    .pager.hide{opacity:0;visibility:hidden;pointer-events:none;transform:scale(.8)}
+
+    /* 言語トグル */
+    .lang-toggle{position:fixed;top:max(12px,env(safe-area-inset-top));right:clamp(12px,4vw,24px);z-index:70;
+      min-height:34px;padding:0 14px;border-radius:18px;cursor:pointer;color:var(--paper);font:inherit;
+      font-size:12px;font-weight:700;letter-spacing:.1em;display:flex;align-items:center;gap:6px;
+      background:linear-gradient(160deg,rgba(20,22,34,.62),rgba(6,8,14,.55));
+      -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+      border:1px solid rgba(215,180,106,.55);box-shadow:0 6px 18px rgba(0,0,0,.42);
+      -webkit-tap-highlight-color:transparent;transition:transform .2s ease}
+    .lang-toggle::before{content:"";width:13px;height:13px;border-radius:50%;
+      border:1.5px solid var(--gold);box-shadow:inset 0 0 0 1px rgba(101,216,255,.4)}
+    .lang-toggle:active{transform:scale(.94)}
+    .lang-toggle:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+    /* 中国語モードでは日本語の読みガナを隠す */
+    body.zh figcaption span{display:none}
+
+    /* クレジット */
+    .credits{margin-top:6px}
+    .credits .label{display:block;color:var(--gold);font-style:normal;font-size:10px;letter-spacing:.16em;margin-bottom:12px}
+    .actor-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0;padding:0}
+    .actor-list li{font-size:14px;font-weight:700;letter-spacing:.1em;padding:9px 8px;text-align:center;
+      background:rgba(255,255,255,.045);border:1px solid rgba(215,180,106,.24);border-radius:11px}
+    .credits .staff-sec,.credits .org{margin-top:13px;padding-top:10px;border-top:1px solid rgba(215,180,106,.3)}
+    .credits .staff-sec:first-child{margin-top:0;padding-top:0;border-top:0}
+    .credits .staff{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}
+    .credits .item{line-height:1.25}
+    .credits .item em{display:block;color:var(--gold);font-style:normal;font-size:10px;letter-spacing:.14em;margin-bottom:1px}
+    .credits .item b{font-weight:600;font-size:14px;letter-spacing:.04em}
+    .credits .co{font-size:13px;font-weight:700;color:var(--paper);letter-spacing:.01em}
+    .credits .members{color:rgba(245,239,226,.74);font-size:12.5px;margin-top:5px;letter-spacing:.06em}
+
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .8s ease}
+    .reveal.in{opacity:1;transform:none}
+
+    /* ===== PC：左右分割 ===== */
+    @media (min-width:860px){
+      .stage{right:auto;width:50vw;height:100svh}
+      .scroller{top:0;left:50vw;right:0;width:50vw}
+      .block{padding:clamp(40px,6vw,80px);padding-right:max(clamp(40px,6vw,80px),80px)}
+      .cast-pic{height:150px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.001ms!important;animation-delay:0!important;transition-duration:.001ms!important}
+      .reveal{opacity:1;transform:none}
+    }
+      /* P14：cover/outro をロゴ→テキストに（他は shimajiro のまま） */
+    .cover-text{position:absolute;left:0;right:0;bottom:max(88px,calc(env(safe-area-inset-bottom) + 72px));z-index:2;padding:0 26px;text-align:center;color:var(--paper)}
+    .cover-h1{font-size:clamp(26px,7.2vw,39px);font-weight:800;line-height:1.22;text-shadow:0 2px 16px rgba(0,0,0,.62)}
+    .cover-sub{margin-top:12px;font-size:15px;line-height:1.72;color:var(--soft);text-shadow:0 1px 10px rgba(0,0,0,.55)}
+  </style>
+</head>
+<body>
+  <div class="preloader" aria-hidden="true"></div>
+  <div class="flashfx" id="flashfx" aria-hidden="true"></div>
+
+  <!-- オープニング：全画面ヒーロー（ロゴが飛び出す） -->
+  <div class="cover" id="cover" style="background-image:url('art/hero.jpg')">
+    <div class="burst" aria-hidden="true"></div>
+    <div class="glow" aria-hidden="true"></div>
+    <div class="meteors" aria-hidden="true"><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span></div>
+    <div class="cover-inner cover-text">
+      <h1 class="cover-h1">當他想再點一次，巧虎就把世界說給他聽</h1>
+      <p class="cover-sub">巧虎＋4本圖鑑，一點就聽見中英雙語、真實音效與唸謠。</p>
+    </div>
+    <button class="cover-cue" type="button" aria-label="開始"><span class="cue-label">先聽巧虎怎麼回話</span><span class="chev" aria-hidden="true"></span></button>
+  </div>
+
+  <!-- 上：固定アート -->
+  <div class="stage" aria-hidden="true">
+    <div class="layer"></div>
+    <div class="layer"></div>
+    <div class="flash"></div>
+    <div class="meter"><span class="title">Opening</span><b class="count">01 / 03</b></div>
+  </div>
+
+  <!-- 下：スクロール文字 -->
+  <main class="scroller">
+    <section class="block" data-bg="art/mid1.jpg" data-pos="center 45%" data-title="Scene 1"><div class="reveal"><p class="idx">Scene 01</p><h2>主角不是規格，是會回話的巧虎</h2><p style="margin-top:10px">寶寶伸手時，巧虎把聲音帶回來。</p></div></section>
+    <section class="block" data-bg="art/mid2.jpg" data-pos="center 45%" data-title="Scene 2"><div class="reveal"><p class="idx">Scene 02</p><h2>四本圖鑑，把今天看得到的世界放進來</h2><p style="margin-top:10px">生活、動物、交通工具，約 1000 個中英詞彙；另附一本給爸媽的育兒誌。</p></div></section>
+    <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Scene 3"><div class="reveal"><p class="idx">Scene 03</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。</p></div></section>
+  </main>
+
+  <!-- エンディング：全画面ヒーロー（クレジット後）→ タップ/スクロールで最初へループ -->
+  <div class="outro" id="outro" style="background-image:url('art/ending.jpg')">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="meteors"><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span><span class="meteor"></span></div>
+    <div class="cover-inner cover-text">
+      <h1 class="cover-h1">不是現在就要他記住很多英文，</h1>
+      <p class="cover-sub">是讓他每次把手伸向世界，都聽見一個能和你一起發現的回應。</p>
+    </div>
+    <button class="cover-cue" type="button" aria-label="看完整內容"><span class="cue-label">看看完整內容</span><span class="chev" aria-hidden="true"></span></button>
+  </div>
+
+  <div class="pager-nav">
+    <button class="pager up hide" id="pagerUp" type="button" aria-label="前のページへ"></button>
+    <button class="pager down" id="pagerDown" type="button" aria-label="次のページへ"></button>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+      var body=document.body;
+      var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var layers=[].slice.call(document.querySelectorAll(".stage .layer"));
+      var flash=document.querySelector(".flash");
+      var stageLogo=document.querySelector(".stage-logo");
+      var titleEl=document.querySelector(".meter .title");
+      var countEl=document.querySelector(".meter .count");
+      var scroller=document.querySelector(".scroller");
+      var blocks=[].slice.call(document.querySelectorAll(".block"));
+      var pagerUp=document.getElementById("pagerUp"),pagerDown=document.getElementById("pagerDown");
+      var outro=document.getElementById("outro"),outroShown=false,outroReady=false,looping=false;
+      var active=0,curBg="",curLang="ja";
+
+      // エンディング → タップ/スクロールでオープニングと同じ退場演出 → 先頭へループ
+      function outroLoop(){
+        if(looping||!outroShown||!outroReady)return;
+        looping=true;
+        scroller.scrollTop=0;              // 退場中の不透明な画面の裏で先頭へ戻す
+        outro.classList.add("out");        // フェード＆拡大で退場し、冒頭を見せる
+        setTimeout(function(){
+          outro.classList.remove("show","go","out");
+          outroShown=false;looping=false;
+        },800);
+      }
+      if(outro){
+        outro.addEventListener("click",outroLoop);
+        outro.addEventListener("wheel",outroLoop,{passive:true});
+      }
+      // エンディングを表示（最後のブロックを見たあと、もう一度「進む」で）
+      function showEnding(){
+        if(!outro||outroShown||looping)return;
+        outroShown=true;outroReady=false;
+        outro.classList.add("show");outro.classList.remove("go");void outro.offsetWidth;outro.classList.add("go");
+        setTimeout(function(){outroReady=true;},700);
+        if(pagerDown)pagerDown.classList.add("hide");
+        if(pagerUp)pagerUp.classList.add("hide");
+      }
+
+      // ページ送り：長いブロックは画面ぶんずつ、収まりきったら隣のブロックへ。最後の次でエンディング
+      function goNext(){
+        if(outroShown)return;
+        var vh=scroller.clientHeight, cur=scroller.scrollTop, max=scroller.scrollHeight-vh, next;
+        var b=blocks[Math.max(0,lastIdx)], blockBottom=b.offsetTop+b.offsetHeight;
+        if(blockBottom-(cur+vh) > vh*0.3){ next=cur+vh*0.9; }
+        else if(lastIdx<blocks.length-1){ next=blocks[lastIdx+1].offsetTop; }
+        else { showEnding(); return; }   // 最後のブロックを表示済み → エンディングへ
+        scroller.scrollTo({top:Math.min(next,max),behavior:reduce?"auto":"smooth"});
+      }
+      function goPrev(){
+        if(outroShown)return;
+        var vh=scroller.clientHeight, cur=scroller.scrollTop, next;
+        var b=blocks[Math.max(0,lastIdx)];
+        if(cur-b.offsetTop > vh*0.3){ next=cur-vh*0.9; }
+        else{ next=(lastIdx>0)?blocks[lastIdx-1].offsetTop:0; }
+        scroller.scrollTo({top:Math.max(0,next),behavior:reduce?"auto":"smooth"});
+      }
+      if(pagerDown){pagerDown.addEventListener("click",goNext);}
+      if(pagerUp){pagerUp.addEventListener("click",goPrev);}
+
+      function setStage(b){
+        var src=b.dataset.bg,pos=b.dataset.pos||"center";
+        var i=blocks.indexOf(b);
+        titleEl.textContent=b.dataset.title||"";
+        countEl.textContent=String(i+1).padStart(2,"0")+" / "+String(blocks.length).padStart(2,"0");
+        if(stageLogo){stageLogo.classList.toggle("show",!!b.querySelector(".idx"));}
+        if(src===curBg){layers.forEach(function(l){l.style.backgroundPosition=pos;});return;}
+        curBg=src;
+        var next=layers[1-active],now=layers[active];
+        next.style.backgroundImage="url('"+src+"')";next.style.backgroundPosition=pos;
+        next.classList.add("on");now.classList.remove("on");active=1-active;
+        if(!reduce){flash.classList.remove("go");void flash.offsetWidth;flash.classList.add("go");}
+      }
+
+      // アクティブ場面＝スクロール中央が含むブロック
+      var ticking=false,lastIdx=-1;
+      function update(){
+        ticking=false;
+        var top=scroller.scrollTop;
+        var mid=top+scroller.clientHeight*0.42;
+        var idx=0;
+        for(var i=0;i<blocks.length;i++){ if(blocks[i].offsetTop<=mid) idx=i; else break; }
+        if(idx!==lastIdx){lastIdx=idx;setStage(blocks[idx]);}
+        // ロゴをスクロールに合わせて少しだけ動かす（パララックス）
+        if(stageLogo){
+          var b=blocks[idx],frac=(top-b.offsetTop)/Math.max(1,b.offsetHeight);
+          var y=Math.max(-4,Math.min(12,frac*16-2));
+          stageLogo.style.transform="translate3d(0,"+y.toFixed(1)+"px,0)";
+        }
+        // ボタン表示：最上部では戻る／エンディング表示中は両方を隠す
+        if(pagerUp){pagerUp.classList.toggle("hide",top<=4||outroShown);}
+        if(pagerDown){pagerDown.classList.toggle("hide",outroShown);}
+        // 安全策：万一スクロールで最下部から離れたらエンディングを閉じる
+        if(outro&&!looping&&outroShown&&top<(scroller.scrollHeight-scroller.clientHeight-4)){
+          outroShown=false;outro.classList.remove("show","go");
+        }
+      }
+      scroller.addEventListener("scroll",function(){ if(!ticking){requestAnimationFrame(update);ticking=true;} },{passive:true});
+
+      // reveal
+      var rio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");rio.unobserve(e.target);}});},{root:scroller,threshold:.14});
+      document.querySelectorAll(".reveal").forEach(function(el){rio.observe(el);});
+
+      // counters
+      function fmt(v,d,p,s){return (p||"")+(d?v.toFixed(d):Math.round(v).toLocaleString("en-US"))+(s||"");}
+      function animNum(el){
+        if(el.dataset.done)return;el.dataset.done="1";
+        var t=Number(el.dataset.count),d=Number(el.dataset.decimals||0),p=el.dataset.prefix||"",s=el.dataset.suffix||"";
+        if(reduce){el.textContent=fmt(t,d,p,s);return;}
+        var st=performance.now(),du=1400;
+        (function step(n){var e=Math.min(1,(n-st)/du),k=1-Math.pow(1-e,3);el.textContent=fmt(t*k,d,p,s);if(e<1)requestAnimationFrame(step);})(performance.now());
+      }
+      var nums=document.querySelector(".nums");
+      if(nums){var nio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){document.querySelectorAll("[data-count]").forEach(animNum);nio.disconnect();}});},{root:scroller,threshold:.3});nio.observe(nums);}
+
+      // bars
+      function animBar(r){
+        if(r.dataset.done)return;r.dataset.done="1";
+        r.querySelector(".track i").style.width=(r.dataset.w||0)+"%";
+        var amtEl=r.querySelector(".amt"),t=Number(r.dataset.amt||0);
+        if(reduce){amtEl.textContent="NT$"+t.toFixed(2)+"M";return;}
+        var st=performance.now(),du=1200;
+        (function step(n){var e=Math.min(1,(n-st)/du),k=1-Math.pow(1-e,3);amtEl.textContent="NT$"+(t*k).toFixed(2)+"M";if(e<1)requestAnimationFrame(step);})(performance.now());
+      }
+      var bio=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){animBar(e.target);bio.unobserve(e.target);}});},{root:scroller,threshold:.35});
+      document.querySelectorAll(".bar").forEach(function(r){bio.observe(r);});
+
+      // ending（言語対応）
+      var eb=document.querySelector(".ending-btn");
+      var END_TXT={ja:{open:"結末を閉じる",closed:"結末を読む（ネタバレ）"},zh:{open:"收合結局",closed:"閱讀結局（劇透）"}};
+      function refreshEnding(){if(!eb)return;var o=eb.closest(".ending").classList.contains("open");eb.textContent=(END_TXT[curLang]||END_TXT.ja)[o?"open":"closed"];eb.setAttribute("aria-expanded",o?"true":"false");}
+      if(eb){eb.addEventListener("click",function(){eb.closest(".ending").classList.toggle("open");refreshEnding();});}
+
+      // オープニング：全画面ヒーロー → 退場でダイジェストへ
+      var cover=document.getElementById("cover"),coverDone=false;
+      function dismissCover(){
+        if(coverDone||!cover)return;coverDone=true;
+        cover.classList.add("out");
+        body.classList.add("entering");
+        setTimeout(function(){body.classList.remove("entering");},1350);
+        setTimeout(function(){cover.classList.add("gone");},1600);
+      }
+      if(cover){
+        cover.addEventListener("click",dismissCover);
+        cover.addEventListener("wheel",dismissCover,{passive:true});
+        cover.addEventListener("touchmove",dismissCover,{passive:true});
+        cover.addEventListener("keydown",function(e){
+          var k=e.key;
+          if(k==="Enter"||k===" "||k==="Spacebar"||k==="ArrowDown"||k==="PageDown"){dismissCover();}
+        });
+      }
+
+      // ===== 言語切り替え（日本語 / 繁體中文） =====
+      var I18N_ZH={
+        "hero-h1":"台灣親子引頸期盼的夏季大型舞台劇。",
+        "hero-lead":"演出全程為中文，但只要先了解劇情大綱與登場角色，就能盡情享受。開演前的幾分鐘，先掌握這裡的重點吧。",
+        "date-main":"2026年6月27日（六）","date-sub":"開演 10:30",
+        "venue-main":"台北市政府 親子劇場 ","venue-link":"地圖 →","venue-sub":"位於台北市政府大樓內的親子劇場。",
+        "biz-h2":"今天的觀劇，是了解台灣事業的好機會。",
+        "biz-lead":"對台灣的家庭來說，巧虎的舞台劇是「能在劇場見到的巧虎」，早已耳熟能詳。本次巡演從台北出發，巡迴桃園、高雄、台南、新竹、台中、員林共7座城市。",
+        "num-shows":"演出場次（場）","num-cities":"演出城市（座）","num-tickets":"預計票券張數","num-sales":"票券銷售額",
+        "bar-tainan":"台南、員林",
+        "biz-note":"此為各場館的銷售額（百萬新台幣）。「台南、員林」為兩個場館的合計數字。7個場館合計約NT$19.14M，與上方的票券銷售額一致。數值以年代售票系統的統計為基準，可能因退款或調整而與ERP的最終銷售額有所差異。",
+        "cast-h2":"知道了名字，舞台就會瞬間變得親近。",
+        "cast-h2b":"還有，推動故事的兩組。",
+        "cast-lead":"即使聽不懂所有台詞，只要知道角色的名字與身分，就能跟上舞台上發生的故事。",
+        "cast-captain":"勇氣隊長",
+        "s1-h":"在博物館，銀河的事件揭開序幕。",
+        "s1-p":"舞台是收藏著宇宙寶物的「勇氣星球博物館」。巧虎一行人得知了英雄「勇氣隊長」的傳說，以及作為其力量來源的寶石「神祕碎片」。然而就在此時，銀河怪盜送來了預告函。",
+        "s2-h":"怪盜現身，寶物遭到覬覦。",
+        "s2-p":"勇氣隊長登場了，但雙人組怪盜操控影子奪走了碎片。失去力量來源的勇氣隊長，變成了嬌小的模樣。一場奪回失竊寶物的冒險，就此展開。",
+        "s2-note":"從這一帶開始，觀眾席的孩子們也會出聲一同參與，是相當熱鬧的橋段。",
+        "s3-h":"循著線索，登上太空船。",
+        "s3-p":"巧虎一行人登上太空船「勇氣號」。駕駛是巧虎、導航是琪琪、雷達是妙妙、能源是桃樂比。每個人都有自己的任務，彼此呼應、攜手前進。",
+        "s4-h":"穿越隕石群，冒險擴展至整個銀河。",
+        "s4-p":"阻擋去路的，是危險的隕石地帶。影像與音樂讓速度感瞬間飆升，是精彩看點之一。這裡與其追著劇情，不如一起感受暗場、音效與孩子們的歡呼。",
+        "s5-h":"在寶石星球，遇見守護最後碎片的居民。",
+        "s5-p":"他們抵達了住著寶石般居民的「寶石星球」。居民們守護著最後的碎片，並考驗巧虎一行人是否值得信任。",
+        "s6-h":"追逐、逃跑，眾人合力阻止。",
+        "s6-p":"怪盜也在此現身，圍繞最後碎片的追逐戰就此展開。除了歌曲與舞蹈，奔跑追逐的場面也越來越多。此外，銀河中還開始擴散出詭異的裂縫。",
+        "s7-h":"走向故事的核心。結局，先保留一點祕密。",
+        "s7-p":"所有人聚集在宛如光環的地方。其實怪盜，也並非單純的壞人。即使聽不懂中文，「大家想守護的是什麼」，也能從舞台上的動作感受到。",
+        "s7-secret":"其實雙人組怪盜，是為了拯救瀕臨毀滅的故鄉「舞動星球」而蒐集碎片。他們以為不會有人相信自己，才選擇了奪取這條路。最後，三塊碎片合而為一，化為名為「銀河之心」的力量，勇氣隊長決定以自身的力量為代價拯救宇宙。裂縫闔上，宇宙重回和平。而這個故事想傳達的，是一個訊息——「真正的勇氣，不在於強壯的外表或特別的力量」。即使外貌改變，心中的勇氣依然不變，這正是這齣舞台劇最想傳遞的訊息。",
+        "close-h2":"今天，就請在現場親自感受它的高人氣吧。",
+        "close-note":"票券的銷售狀況、周邊商品、拍照留念、孩子們的反應。這裡不只是單純的兒童劇，更是巧虎這個品牌與台灣家庭直接連結的重要現場。",
+        "cr-h2":"打造這齣舞台劇的人們。",
+        "cr-staff":"舞台工作人員"
+      };
+      var i18nEls=[].slice.call(document.querySelectorAll("[data-i18n]"));
+      i18nEls.forEach(function(el){el._ja=el.innerHTML;});
+      var langBtn=document.getElementById("langToggle"),langLabel=langBtn&&langBtn.querySelector(".lt-label");
+      function setLang(lang){
+        curLang=(lang==="zh")?"zh":"ja";
+        i18nEls.forEach(function(el){
+          var k=el.getAttribute("data-i18n");
+          el.innerHTML=(curLang==="zh"&&I18N_ZH[k]!=null)?I18N_ZH[k]:el._ja;
+        });
+        document.documentElement.lang=(curLang==="zh")?"zh-Hant":"ja";
+        body.classList.toggle("zh",curLang==="zh");
+        if(langLabel)langLabel.textContent=(curLang==="zh")?"日本語":"繁體中文";
+        refreshEnding();
+        try{localStorage.setItem("lang",curLang);}catch(e){}
+      }
+      if(langBtn){langBtn.addEventListener("click",function(){setLang(curLang==="zh"?"ja":"zh");});}
+      var savedLang="ja";try{savedLang=localStorage.getItem("lang")||"ja";}catch(e){}
+      setLang(savedLang);
+
+      // init
+      setStage(blocks[0]);lastIdx=0;
+      var shown=false;function ready(){if(shown)return;shown=true;body.classList.add("is-ready");body.classList.add("cover-go");}
+      document.addEventListener("DOMContentLoaded",function(){setTimeout(ready,160);});
+      window.addEventListener("load",ready);setTimeout(ready,2200);
+    })();
+    function thievesFallback(img){var ph=document.createElement("div");ph.className="cast-ph";ph.setAttribute("role","img");ph.setAttribute("aria-label","銀河怪盜（イラスト準備中）");ph.innerHTML="<b>銀河怪盜</b><small>イラスト準備中</small>";img.replaceWith(ph);}
+  </script>
+</body>
+</html>
