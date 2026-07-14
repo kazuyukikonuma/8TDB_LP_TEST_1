@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>巧虎雙語點讀圖鑑｜LP（測試）</title>
   <meta name="description" content="巧虎雙語點讀圖鑑 LP 測試（分割捲動）。">
   <meta name="theme-color" content="#040509">
@@ -378,11 +378,12 @@
     /* Scene7 商品写真ギャラリー（stage 上に重ねる・左右スワイプ＋矢印） */
     .gallery{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:6;display:none;background:var(--cream)}
     .gallery.on{display:block}
-    .gtrack{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .gtrack{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+      touch-action:pan-x;overscroll-behavior:contain}
     .gtrack::-webkit-scrollbar{display:none}
     .gslide{flex:0 0 100%;height:100%;scroll-snap-align:center;display:grid;place-items:center;padding:12px 40px}
     .gslide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
-      filter:drop-shadow(0 10px 22px rgba(51,41,31,.16))}
+      filter:drop-shadow(0 10px 22px rgba(51,41,31,.16));pointer-events:none;-webkit-user-drag:none;user-select:none}
     .gnav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;cursor:pointer;
       border:1px solid rgba(154,116,32,.5);background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
       color:var(--gold-ink);font-size:26px;line-height:1;display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.14);
@@ -462,7 +463,7 @@
 
   <!-- エンディング：全画面ヒーロー → CTA と戻るボタンのみ操作可 -->
   <div class="outro" id="outro" style="background-image:url('art/ending.jpg')">
-    <button class="outro-back" id="outroBack" type="button" aria-label="回上一頁"><span class="ob-chev" aria-hidden="true"></span>回上一頁</button>
+    <button class="outro-back" id="outroBack" type="button" aria-label="從頭再看"><span class="ob-chev" aria-hidden="true"></span>從頭再看</button>
     <div class="cover-text">
       <h1 class="cover-h1">不是現在就要他記住很多英文，</h1>
       <p class="cover-sub">是讓他每次把手伸向世界，都聽見一個能和你一起發現的回應。</p>
@@ -480,6 +481,10 @@
     (function(){
       "use strict";
       var body=document.body;
+      // ピンチ拡大縮小を無効化（iOS Safari は viewport の user-scalable=no を無視するため gesture を抑止）
+      document.addEventListener("gesturestart",function(e){e.preventDefault();},{passive:false});
+      document.addEventListener("gesturechange",function(e){e.preventDefault();},{passive:false});
+      document.addEventListener("gestureend",function(e){e.preventDefault();},{passive:false});
       var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       var layers=[].slice.call(document.querySelectorAll(".stage .layer"));
       var flash=document.querySelector(".flash");
@@ -499,8 +504,18 @@
         if(pagerDown)pagerDown.classList.remove("hide");
         toggleGallery(lastIdx===galleryIdx);
       }
+      // エンディング → 先頭（ヒーロー）から見直す
+      function restart(){
+        if(!outro)return;
+        outroShown=false;outro.classList.remove("show","go");
+        toggleGallery(false);
+        scroller.scrollTop=0;lastIdx=0;setStage(blocks[0]);
+        if(pagerDown)pagerDown.classList.remove("hide");
+        if(pagerUp)pagerUp.classList.add("hide");
+        if(cover){ coverDone=false; cover.classList.remove("gone","out"); }   // ヒーローを再表示（フェードイン）
+      }
       var outroBack=document.getElementById("outroBack");
-      if(outroBack)outroBack.addEventListener("click",closeOutro);
+      if(outroBack)outroBack.addEventListener("click",restart);
       // エンディングを表示（最後のブロックを見たあと、もう一度「進む」で）
       function showEnding(){
         if(!outro||outroShown)return;
@@ -534,7 +549,7 @@
       function showHint(){ if(hintDone||!navHint)return; navHint.classList.add("show"); clearTimeout(hintTimer); hintTimer=setTimeout(hideHint,6000); }
       function hideHint(){ if(!navHint)return; hintDone=true; navHint.classList.remove("show"); }
       function navNext(){ hideHint(); goNext(); }
-      function navPrev(){ hideHint(); if(outroShown){closeOutro();return;} goPrev(); }
+      function navPrev(){ hideHint(); if(outroShown){restart();return;} goPrev(); }
       if(pagerDown){pagerDown.addEventListener("click",navNext);}
       if(pagerUp){pagerUp.addEventListener("click",navPrev);}
       // キーボード操作（アクセシビリティ）
@@ -555,10 +570,17 @@
       function gGo(i){ if(!gtrack)return; i=Math.max(0,Math.min(gslides.length-1,i)); gtrack.scrollTo({left:i*gtrack.clientWidth,behavior:reduce?"auto":"smooth"}); }
       function gCurrent(){ return gtrack?Math.round(gtrack.scrollLeft/Math.max(1,gtrack.clientWidth)):0; }
       function gSync(){ var i=gCurrent(); [].forEach.call(gdots?gdots.children:[],function(d,k){d.classList.toggle("on",k===i);}); }
-      if(gPrev)gPrev.addEventListener("click",function(){gGo(gCurrent()-1);});
-      if(gNext)gNext.addEventListener("click",function(){gGo(gCurrent()+1);});
-      if(gtrack){var gt=false;gtrack.addEventListener("scroll",function(){if(!gt){requestAnimationFrame(function(){gt=false;gSync();});gt=true;}},{passive:true});}
-      function toggleGallery(on){ if(gallery)gallery.classList.toggle("on",!!on); }
+      var gTimer=0;
+      function gAuto(){ if(gslides.length<2)return; clearInterval(gTimer); gTimer=setInterval(function(){ var n=gCurrent()+1; if(n>=gslides.length)n=0; gGo(n); },3500); }
+      function gStop(){ clearInterval(gTimer);gTimer=0; }
+      if(gPrev)gPrev.addEventListener("click",function(){gGo(gCurrent()-1);gAuto();});
+      if(gNext)gNext.addEventListener("click",function(){gGo(gCurrent()+1);gAuto();});
+      if(gtrack){
+        var gt=false;gtrack.addEventListener("scroll",function(){if(!gt){requestAnimationFrame(function(){gt=false;gSync();});gt=true;}},{passive:true});
+        gtrack.addEventListener("pointerdown",function(){ if(gTimer)gAuto(); },{passive:true});   // 手動操作後はタイマーをリセット
+      }
+      // Scene7に入ると自動回転、離れると停止
+      function toggleGallery(on){ if(!gallery)return; var was=gallery.classList.contains("on"); gallery.classList.toggle("on",!!on); if(!!on===was)return; if(on)gAuto(); else gStop(); }
 
       function setStage(b){
         var src=b.dataset.bg,pos=b.dataset.pos||"center",fit=b.dataset.fit||"cover";
