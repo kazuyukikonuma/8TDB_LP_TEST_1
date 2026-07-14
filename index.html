@@ -158,8 +158,9 @@
     .stage-logo.show{opacity:1}
 
     /* ===== 下：スクロールする文字 ===== */
-    .scroller{position:fixed;left:0;right:0;top:var(--stage);bottom:0;z-index:2;overflow-y:auto;
-      -webkit-overflow-scrolling:touch;background:var(--cream);color:var(--ink);scroll-snap-type:y proximity}
+    /* ボタン操作のみ：指スワイプ/ホイールでの自走を無効化（JSのプログラム送りは動く） */
+    .scroller{position:fixed;left:0;right:0;top:var(--stage);bottom:0;z-index:2;overflow:hidden;
+      background:var(--cream);color:var(--ink);touch-action:none;overscroll-behavior:none}
     .block{min-height:100%;padding:clamp(22px,6.5vw,38px);padding-right:76px;display:flex;flex-direction:column;
       justify-content:center;gap:13px;border-top:1px solid rgba(154,116,32,.24);scroll-snap-align:start}
     .block:first-child{border-top:0}
@@ -240,6 +241,12 @@
     .pager:active{transform:scale(.9)}
     .pager:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}
     .pager.hide{opacity:0;visibility:hidden;pointer-events:none;transform:scale(.8)}
+    /* ボタン送りの初回ヒント（右のボタンへ誘導・一度だけ） */
+    .nav-hint{position:fixed;right:clamp(70px,16vw,90px);top:50%;transform:translateY(-50%) translateX(8px);z-index:41;
+      padding:9px 15px;border-radius:20px;font-size:12.5px;font-weight:700;letter-spacing:.03em;color:#fdf7ec;white-space:nowrap;
+      background:rgba(143,78,54,.94);box-shadow:0 8px 22px rgba(143,78,54,.4);
+      opacity:0;visibility:hidden;transition:opacity .5s ease,visibility .5s ease,transform .5s ease;pointer-events:none}
+    .nav-hint.show{opacity:1;visibility:visible;transform:translateY(-50%) translateX(0)}
 
     /* 言語トグル */
     .lang-toggle{position:fixed;top:max(12px,env(safe-area-inset-top));right:clamp(12px,4vw,24px);z-index:70;
@@ -316,6 +323,16 @@
     .buy:active{transform:translateY(0) scale(.98)}
     .buy:focus-visible{outline:2px solid var(--gold-ink);outline-offset:4px}
     .fineprint{margin-top:11px;font-size:11px;color:rgba(51,41,31,.6);line-height:1.6}
+
+    /* 商品ロゴ（巧虎雙語點讀圖鑑）：cover 上部＝ブランド identity／Scene7＝商品名 */
+    .cover-brand{position:absolute;left:0;right:0;top:max(22px,calc(env(safe-area-inset-top) + 14px));z-index:2;
+      display:flex;justify-content:center;padding:0 22px;pointer-events:none}
+    .cover-brand::before{content:"";position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+      width:min(94%,540px);height:160%;z-index:-1;
+      background:radial-gradient(58% 54% at 50% 50%,rgba(248,242,230,.60),rgba(248,242,230,.26) 56%,transparent 74%);
+      filter:blur(12px)}
+    .cover-logo-img{width:min(60vw,272px);max-width:92%;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.32))}
+    .prod-logo{width:min(300px,84%);height:auto;margin:6px 0 10px;filter:drop-shadow(0 6px 14px rgba(51,41,31,.14))}
   </style>
 </head>
 <body>
@@ -324,6 +341,7 @@
 
   <!-- オープニング：全画面ヒーロー（ロゴが飛び出す） -->
   <div class="cover" id="cover" style="background-image:url('art/hero.jpg')">
+    <div class="cover-brand"><img class="cover-logo-img" src="art/logo.png" alt="巧虎雙語點讀圖鑑（寶寶第一套雙語點讀書）"></div>
     <div class="cover-text">
       <h1 class="cover-h1">當他想再點一次，巧虎就把世界說給他聽</h1>
       <p class="cover-sub">巧虎＋4本圖鑑，一點就聽見中英雙語、真實音效與唸謠。</p>
@@ -352,7 +370,7 @@
     <!-- Scene 6：機能の価値（定稿） -->
     <section class="block" data-bg="art/mid3.jpg" data-pos="center 45%" data-title="Sound"><div class="reveal"><p class="idx">Scene 06</p><h2>一點，不只是一個聲音</h2><p style="margin-top:10px">中英雙語、真實音效與唸謠，想聽幾次就一起點幾次。每一次，都是一次小小的發現。</p></div></section>
     <!-- Scene 7：全套内容（all.png・透過→クリーム地） -->
-    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><p class="idx">Scene 07</p><h2>打開箱子，全部都在這裡</h2>
+    <section class="block" data-bg="art/all.png" data-pos="center 42%" data-fit="contain" data-title="All in"><div class="reveal"><p class="idx">Scene 07</p><img class="prod-logo" src="art/logo.png" alt="巧虎雙語點讀圖鑑（寶寶第一套雙語點讀書）"><h2>打開箱子，全部都在這裡</h2>
       <ul class="pack">
         <li><b>點讀巧虎</b>主機 ×1</li>
         <li><b>雙語點讀圖鑑</b> ×4 本（約 1000 個中英詞彙）</li>
@@ -380,6 +398,7 @@
     <button class="pager up hide" id="pagerUp" type="button" aria-label="前のページへ"></button>
     <button class="pager down" id="pagerDown" type="button" aria-label="次のページへ"></button>
   </div>
+  <div class="nav-hint" id="navHint" aria-hidden="true">點右側按鈕前進　→</div>
 
   <script>
     (function(){
@@ -409,8 +428,7 @@
         },800);
       }
       if(outro){
-        outro.addEventListener("click",outroLoop);
-        outro.addEventListener("wheel",outroLoop,{passive:true});
+        outro.addEventListener("click",outroLoop);   // ボタン操作のみ：ホイール自走は無効
       }
       // 購入CTAは官方商城へ遷移（ループ演出を誘発させない）
       var outroCta=document.getElementById("outroCta");
@@ -443,8 +461,21 @@
         else{ next=(lastIdx>0)?blocks[lastIdx-1].offsetTop:0; }
         scroller.scrollTo({top:Math.max(0,next),behavior:reduce?"auto":"smooth"});
       }
-      if(pagerDown){pagerDown.addEventListener("click",goNext);}
-      if(pagerUp){pagerUp.addEventListener("click",goPrev);}
+      // 初回ヒント（ボタン送りに気づいてもらう安全策）
+      var navHint=document.getElementById("navHint"),hintDone=false,hintTimer=0;
+      function showHint(){ if(hintDone||!navHint)return; navHint.classList.add("show"); clearTimeout(hintTimer); hintTimer=setTimeout(hideHint,6000); }
+      function hideHint(){ if(!navHint)return; hintDone=true; navHint.classList.remove("show"); }
+      function navNext(){ hideHint(); goNext(); }
+      function navPrev(){ hideHint(); goPrev(); }
+      if(pagerDown){pagerDown.addEventListener("click",navNext);}
+      if(pagerUp){pagerUp.addEventListener("click",navPrev);}
+      // キーボード操作（アクセシビリティ：本編中のみ）
+      document.addEventListener("keydown",function(e){
+        if(!coverDone||outroShown)return;
+        var k=e.key;
+        if(k==="ArrowDown"||k==="PageDown"||k===" "||k==="Spacebar"){e.preventDefault();navNext();}
+        else if(k==="ArrowUp"||k==="PageUp"){e.preventDefault();navPrev();}
+      });
 
       function setStage(b){
         var src=b.dataset.bg,pos=b.dataset.pos||"center",fit=b.dataset.fit||"cover";
@@ -527,11 +558,10 @@
         body.classList.add("entering");
         setTimeout(function(){body.classList.remove("entering");},1350);
         setTimeout(function(){cover.classList.add("gone");},1600);
+        setTimeout(showHint,1600);   // 本編突入後に「ボタンで進む」ヒントを一度だけ
       }
       if(cover){
-        cover.addEventListener("click",dismissCover);
-        cover.addEventListener("wheel",dismissCover,{passive:true});
-        cover.addEventListener("touchmove",dismissCover,{passive:true});
+        cover.addEventListener("click",dismissCover);   // ボタン操作のみ：スワイプ/ホイール自走は無効
         cover.addEventListener("keydown",function(e){
           var k=e.key;
           if(k==="Enter"||k===" "||k==="Spacebar"||k==="ArrowDown"||k==="PageDown"){dismissCover();}
