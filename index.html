@@ -68,18 +68,24 @@
     .meteor:nth-child(4){top:0%;left:52%;animation-duration:2.9s;animation-delay:2.1s;width:clamp(120px,32vw,200px)}
     .meteor:nth-child(5){top:16%;left:82%;animation-duration:3.3s;animation-delay:1.7s}
     .meteor:nth-child(6){top:-5%;left:42%;animation-duration:4s;animation-delay:.4s;width:clamp(120px,32vw,200px)}
-    .cover-cue{position:absolute;left:0;right:0;bottom:max(26px,env(safe-area-inset-bottom));z-index:2;
-      display:flex;flex-direction:column;align-items:center;gap:9px;opacity:0;background:none;border:0;cursor:pointer}
-    .cover-cue:focus-visible{outline:2px solid var(--cyan);outline-offset:6px}
-    .cue-label{color:#fff;font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
-      text-shadow:0 1px 6px rgba(0,0,0,.7),0 0 10px rgba(0,0,0,.45)}
-    .cover-cue .chev{width:15px;height:15px;border-right:1.8px solid var(--gold);border-bottom:1.8px solid var(--gold);
-      filter:drop-shadow(0 1px 4px rgba(0,0,0,.6));transform:rotate(45deg);animation:bob 1.6s ease-in-out infinite}
-    @keyframes bob{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(4px,4px)}}
+    /* HERO の主CTA：目立つゴールドのボタン */
+    .cover-cue{position:absolute;left:50%;bottom:max(34px,calc(env(safe-area-inset-bottom) + 12px));transform:translateX(-50%);z-index:2;
+      display:inline-flex;flex-direction:row;align-items:center;gap:9px;opacity:0;cursor:pointer;white-space:nowrap;
+      min-height:54px;padding:0 30px;border-radius:30px;border:0;
+      color:#3a2410;background:linear-gradient(180deg,#f2c669,#dd9d3c);
+      box-shadow:0 14px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.5);-webkit-tap-highlight-color:transparent}
+    .cover-cue:active{transform:translateX(-50%) scale(.97)}
+    .cover-cue:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    .cue-label{color:#3a2410;font-size:clamp(15px,4vw,17px);font-weight:800;letter-spacing:.03em}
+    .cover-cue .chev{width:12px;height:12px;border-right:2.5px solid #3a2410;border-bottom:2.5px solid #3a2410;
+      transform:rotate(45deg);animation:cbob 1.6s ease-in-out infinite}
+    @keyframes cbob{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(3px,3px)}}
     /* ロゴが飛び出す */
     body.cover-go #cover .cover-logo{animation:logoPop 1.1s cubic-bezier(.2,.9,.25,1.25) forwards .15s}
     body.cover-go #cover .glow{animation:glowPulse 1.5s ease forwards .1s}
-    body.cover-go .cover-cue{animation:fadeUp .7s ease forwards 1s}
+    body.cover-go .cover-cue{animation:cueIn .7s ease forwards 1s, cuePulse 2.4s ease-in-out infinite 1.8s}
+    @keyframes cueIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%)}}
+    @keyframes cuePulse{0%,100%{box-shadow:0 14px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.5),0 0 0 0 rgba(242,198,105,.55)}50%{box-shadow:0 14px 30px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.5),0 0 0 12px rgba(242,198,105,0)}}
     @keyframes logoPop{0%{opacity:0;transform:scale(.3)}55%{opacity:1;transform:scale(1.12)}72%{transform:scale(.96)}100%{opacity:1;transform:scale(1)}}
     @keyframes glowPulse{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}50%{opacity:1}100%{opacity:.7;transform:translate(-50%,-50%) scale(1)}}
     @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
@@ -381,18 +387,34 @@
     /* Scene7 商品写真ギャラリー（stage 上に重ねる・左右スワイプ＋矢印） */
     .gallery{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:6;display:none;background:var(--cream)}
     .gallery.on{display:block}
-    .gallery-logo{position:absolute;top:max(10px,calc(env(safe-area-inset-top) + 2px));left:10px;z-index:3;pointer-events:none;
-      background:rgba(247,241,229,.82);border-radius:11px;padding:5px 9px;box-shadow:0 3px 10px rgba(51,41,31,.15)}
-    .gallery-logo img{width:min(30vw,116px);height:auto;display:block;filter:drop-shadow(0 1px 3px rgba(51,41,31,.2))}
     .gtrack{display:flex;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
       touch-action:pan-x;overscroll-behavior:contain}
     .gtrack::-webkit-scrollbar{display:none}
-    .gslide{flex:0 0 100%;height:100%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:8px;padding:18px 34px 32px}
-    .gslide img{max-width:100%;max-height:100%;width:auto;height:auto;min-height:0;object-fit:contain;
+    /* 商品写真を最大化：画像は全域センター、キャプションは下部に絶対配置 */
+    .gslide{flex:0 0 100%;height:100%;scroll-snap-align:center;position:relative;display:grid;place-items:center;padding:10px 16px 40px}
+    .gslide img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;
       filter:drop-shadow(0 10px 22px rgba(51,41,31,.16));pointer-events:none;-webkit-user-drag:none;user-select:none}
-    .gcap{flex:0 0 auto;text-align:center;font-size:12px;line-height:1.5;color:var(--ink-soft);max-width:98%}
+    .gcap{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;max-width:calc(100% - 26px);
+      padding:5px 13px;border-radius:12px;background:rgba(247,241,229,.9);box-shadow:0 2px 9px rgba(51,41,31,.14);
+      text-align:center;font-size:11.5px;line-height:1.45;color:var(--ink-soft)}
     .gcap b{color:var(--ink);font-weight:800}
+
+    /* Scene5：主機が話す中英吹き出し（stageの上に重ねる・押せない演出） */
+    .speech{position:fixed;top:0;left:0;right:0;height:var(--stage);z-index:5;display:none;pointer-events:none;overflow:hidden}
+    .speech.on{display:block}
+    .sbub{position:absolute;display:inline-flex;flex-direction:column;align-items:center;line-height:1;
+      padding:8px 14px;border-radius:15px;background:#fffdf8;box-shadow:0 8px 20px rgba(51,41,31,.22);opacity:0;transform:scale(.6)}
+    .sbub b{font-size:clamp(15px,4.2vw,19px);font-weight:800;color:var(--ink)}
+    .sbub i{font-style:normal;font-size:11px;font-weight:700;color:#b0674a;margin-top:3px;letter-spacing:.02em}
+    .sbub::after{content:"";position:absolute;bottom:-6px;left:20px;border:7px solid transparent;border-top-color:#fffdf8;border-bottom:0}
+    .b1{top:11%;left:5%}.b2{top:8%;right:6%}.b3{top:41%;left:3%}.b4{top:44%;right:4%}
+    .speech.on .sbub{animation:sbubIn .5s cubic-bezier(.2,.9,.3,1.3) forwards,sfloat 3s ease-in-out infinite}
+    .speech.on .b1{animation-delay:.25s,.8s}
+    .speech.on .b2{animation-delay:.95s,1.5s}
+    .speech.on .b3{animation-delay:1.65s,2.2s}
+    .speech.on .b4{animation-delay:2.35s,2.9s}
+    @keyframes sbubIn{from{opacity:0;transform:scale(.6) translateY(6px)}to{opacity:1;transform:none}}
+    @keyframes sfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
     .gnav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:44px;height:44px;border-radius:50%;cursor:pointer;
       border:1px solid rgba(154,116,32,.5);background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
       color:var(--gold-ink);font-size:26px;line-height:1;display:grid;place-items:center;box-shadow:0 6px 16px rgba(0,0,0,.14);
@@ -429,7 +451,6 @@
 
   <!-- Scene7 用：商品写真ギャラリー（左右スワイプ／矢印ボタン） -->
   <div class="gallery" id="gallery" aria-label="商品照片">
-    <div class="gallery-logo"><img src="art/logo.png" alt="巧虎雙語點讀圖鑑" loading="lazy"></div>
     <div class="gtrack" id="gtrack">
       <div class="gslide"><img src="art/all.png" alt="全套內容" loading="lazy"><p class="gcap">全套內容 ‧ 點讀主機＋圖鑑4本＋育兒誌</p></div>
       <div class="gslide"><img src="art/machine.png" alt="點讀巧虎主機" loading="lazy"><p class="gcap"><b>點讀巧虎主機</b>｜握著往圖上一點，中英雙語就回話</p></div>
@@ -442,6 +463,14 @@
     <button class="gnav gprev" id="gPrev" type="button" aria-label="上一張">‹</button>
     <button class="gnav gnext" id="gNext" type="button" aria-label="下一張">›</button>
     <div class="gdots" id="gdots"></div>
+  </div>
+
+  <!-- Scene5 用：主機が話しているような中英吹き出し（8TDB収録テーマの語彙） -->
+  <div class="speech" id="speech" aria-hidden="true">
+    <span class="sbub b1"><b>獅子</b><i>Lion</i></span>
+    <span class="sbub b2"><b>巴士</b><i>Bus</i></span>
+    <span class="sbub b3"><b>企鵝</b><i>Penguin</i></span>
+    <span class="sbub b4"><b>香蕉</b><i>Banana</i></span>
   </div>
 
   <!-- 下：スクロール文字 -->
@@ -592,6 +621,10 @@
       }
       // Scene7に入ると自動回転、離れると停止
       function toggleGallery(on){ if(!gallery)return; var was=gallery.classList.contains("on"); gallery.classList.toggle("on",!!on); if(!!on===was)return; if(on)gAuto(); else gStop(); }
+      // Scene5（主機）で中英吹き出しを表示（再訪時はアニメを再生）
+      var speechEl=document.getElementById("speech"),speechIdx=-1;
+      for(var si=0;si<blocks.length;si++){ if(/machine\.png/.test(blocks[si].dataset.bg||"")){speechIdx=si;break;} }
+      function toggleSpeech(on){ if(speechEl)speechEl.classList.toggle("on",!!on); }
 
       function setStage(b){
         var src=b.dataset.bg,pos=b.dataset.pos||"center",fit=b.dataset.fit||"cover";
@@ -617,6 +650,7 @@
         for(var i=0;i<blocks.length;i++){ if(blocks[i].offsetTop<=mid) idx=i; else break; }
         if(idx!==lastIdx){lastIdx=idx;setStage(blocks[idx]);}
         toggleGallery(lastIdx===galleryIdx && !outroShown);   // Scene7でギャラリー表示
+        toggleSpeech(lastIdx===speechIdx && !outroShown);      // Scene5で中英吹き出し表示
         // ロゴをスクロールに合わせて少しだけ動かす（パララックス）
         if(stageLogo){
           var b=blocks[idx],frac=(top-b.offsetTop)/Math.max(1,b.offsetHeight);
